@@ -1,19 +1,7 @@
-import type { Municipality } from '@/types/municipality';
-import type { Item } from '@/types/item';
-
-type DatasetRule = {
-  itemId: string;
-  categoryName: string;
-  instructions: string;
-  notes?: string;
-  officialUrl?: string;
-};
-
-type MunicipalityDataset = {
-  municipality: Municipality;
-  items: Item[];
-  rules: DatasetRule[];
-};
+import type {
+  Municipality,
+  MunicipalityDataset,
+} from '@/schema/municipality-dataset-schema';
 
 function loadMunicipalityDatasetSchema() {
   try {
@@ -52,11 +40,13 @@ function createValidDataset(): MunicipalityDataset {
     ],
     rules: [
       {
+        municipalityId: 'akita-yokote',
         itemId: 'mobile_battery',
         categoryName: '拠点回収',
         instructions: '端子を絶縁して指定回収拠点に持ち込んでください。',
       },
       {
+        municipalityId: 'akita-yokote',
         itemId: 'plastic_bottle',
         categoryName: '資源ごみ',
         instructions: '中をすすぎ、ラベルを外して出してください。',
