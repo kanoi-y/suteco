@@ -83,7 +83,7 @@ describe('municipalityDatasetSchema', () => {
       municipality: Partial<Municipality>;
     };
 
-    delete dataset.municipality.displayName;
+    (dataset.municipality as Partial<Municipality>).displayName = undefined;
 
     expect(() => municipalityDatasetSchema.parse(dataset as MunicipalityDataset)).toThrow();
   });
