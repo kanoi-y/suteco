@@ -53,6 +53,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "better-sqlite3": "^11.6.0",
+    "expo-sqlite-mock": "^3.0.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",
@@ -65,5 +67,8 @@
     "tsx": "^4.19.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3"]
+  }
 }
