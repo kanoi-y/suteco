@@ -86,6 +86,53 @@ describe('初回起動時の import 導線', () => {
     });
   });
 
+  describe('初期化失敗時', () => {
+    it('getDbClient が失敗するとエラー画面が表示され、メインコンテンツは表示されない', async () => {
+      const err = new Error('SQLite open failed');
+      mockGetDbClient.mockRejectedValue(err);
+
+      render(
+        <InitializationProvider>
+          <MainContent />
+        </InitializationProvider>
+      );
+
+      expect(screen.getByText('初期設定中...')).toBeTruthy();
+
+      await waitFor(() => {
+        expect(screen.getByText('初期化に失敗しました')).toBeTruthy();
+      });
+
+      expect(screen.getByText(err.message)).toBeTruthy();
+      expect(screen.getByRole('button', { name: '再試行' })).toBeTruthy();
+      expect(screen.queryByText('メインコンテンツ')).toBeNull();
+    });
+
+    it('importDataset が失敗するとエラー画面が表示され、メインコンテンツは表示されない', async () => {
+      const db = await openTestDb('import_fail');
+      mockGetDbClient.mockResolvedValue(db);
+      mockImportDataset.mockRejectedValue(new Error('Invalid bundled data'));
+
+      render(
+        <InitializationProvider>
+          <MainContent />
+        </InitializationProvider>
+      );
+
+      expect(screen.getByText('初期設定中...')).toBeTruthy();
+
+      await waitFor(() => {
+        expect(screen.getByText('初期化に失敗しました')).toBeTruthy();
+      });
+
+      expect(screen.getByText('Invalid bundled data')).toBeTruthy();
+      expect(screen.getByRole('button', { name: '再試行' })).toBeTruthy();
+      expect(screen.queryByText('メインコンテンツ')).toBeNull();
+
+      await db.closeAsync();
+    });
+  });
+
   describe('再起動時', () => {
     it('import が二重投入されず、即座にメインコンテンツが表示される', async () => {
       const db = await openTestDb('restart');
