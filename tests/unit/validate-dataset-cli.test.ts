@@ -117,8 +117,9 @@ describe('validate-dataset CLI', () => {
   });
 
   describe('loadCLI', () => {
-    it('CLI 未実装時に loadCLI がエラーを投げる', () => {
-      expect(loadCLI).toThrow(/dataset 検証 CLI が未実装です/);
+    it('CLI 実装時に loadCLI が main 関数を返す', () => {
+      const { main } = loadCLI();
+      expect(typeof main).toBe('function');
     });
   });
 
