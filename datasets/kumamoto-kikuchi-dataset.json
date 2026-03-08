@@ -1,0 +1,584 @@
+{
+  "municipality": {
+    "id": "kumamoto-kikuchi",
+    "displayName": "熊本県菊池市",
+    "version": "2025-09-01"
+  },
+  "items": [
+    {
+      "id": "mobile_battery",
+      "displayName": "モバイルバッテリー",
+      "aliases": [
+        "充電池",
+        "リチウムイオン電池",
+        "充電式バッテリー"
+      ],
+      "keywords": [
+        "モバイルバッテリー",
+        "リチウムイオン電池",
+        "充電池",
+        "バッテリー"
+      ]
+    },
+    {
+      "id": "dry_battery",
+      "displayName": "乾電池",
+      "aliases": [
+        "電池",
+        "ボタン電池",
+        "コイン電池"
+      ],
+      "keywords": [
+        "乾電池",
+        "電池",
+        "ボタン電池",
+        "コイン電池"
+      ]
+    },
+    {
+      "id": "spray_can",
+      "displayName": "スプレー缶",
+      "aliases": [
+        "ガス缶",
+        "カセットボンベ"
+      ],
+      "keywords": [
+        "スプレー缶",
+        "ガス缶",
+        "カセットボンベ"
+      ]
+    },
+    {
+      "id": "lighter",
+      "displayName": "ライター",
+      "aliases": [
+        "チャッカマン"
+      ],
+      "keywords": [
+        "ライター",
+        "チャッカマン"
+      ]
+    },
+    {
+      "id": "rechargeable_small_appliance",
+      "displayName": "電池類が取り外せない充電式小型家電",
+      "aliases": [
+        "充電式小型家電",
+        "電池内蔵小型家電"
+      ],
+      "keywords": [
+        "電池類が取り外せない充電式小型家電",
+        "充電式小型家電",
+        "電池内蔵小型家電"
+      ]
+    },
+    {
+      "id": "pet_bottle",
+      "displayName": "ペットボトル",
+      "aliases": [
+        "PETボトル"
+      ],
+      "keywords": [
+        "ペットボトル",
+        "PETボトル"
+      ]
+    },
+    {
+      "id": "milk_carton",
+      "displayName": "牛乳パック",
+      "aliases": [
+        "紙パック",
+        "ジュースパック",
+        "酒パック"
+      ],
+      "keywords": [
+        "牛乳パック",
+        "紙パック",
+        "ジュースパック",
+        "酒パック"
+      ]
+    },
+    {
+      "id": "plastic_packaging",
+      "displayName": "プラマーク製品",
+      "aliases": [
+        "プラスチック製容器包装",
+        "プラ容器"
+      ],
+      "keywords": [
+        "プラマーク製品",
+        "プラスチック製容器包装",
+        "プラ容器",
+        "食品トレイ",
+        "発泡スチロール"
+      ]
+    },
+    {
+      "id": "styrofoam",
+      "displayName": "発泡スチロール",
+      "aliases": [
+        "緩衝材",
+        "果物用ネット"
+      ],
+      "keywords": [
+        "発泡スチロール",
+        "緩衝材",
+        "果物用ネット"
+      ]
+    },
+    {
+      "id": "newspaper_flyer",
+      "displayName": "新聞紙・折込みチラシ",
+      "aliases": [
+        "新聞",
+        "チラシ"
+      ],
+      "keywords": [
+        "新聞紙",
+        "折込みチラシ",
+        "新聞",
+        "チラシ"
+      ]
+    },
+    {
+      "id": "magazines_paper",
+      "displayName": "雑誌・本・その他の紙",
+      "aliases": [
+        "雑誌",
+        "本",
+        "その他の紙",
+        "コピー用紙",
+        "電話帳"
+      ],
+      "keywords": [
+        "雑誌",
+        "本",
+        "その他の紙",
+        "コピー用紙",
+        "電話帳",
+        "菓子箱"
+      ]
+    },
+    {
+      "id": "clothes",
+      "displayName": "布類",
+      "aliases": [
+        "衣類",
+        "古着",
+        "タオル",
+        "毛布",
+        "カーテン"
+      ],
+      "keywords": [
+        "布類",
+        "衣類",
+        "古着",
+        "タオル",
+        "毛布",
+        "カーテン",
+        "セーター"
+      ]
+    },
+    {
+      "id": "cardboard",
+      "displayName": "段ボール",
+      "aliases": [
+        "ダンボール"
+      ],
+      "keywords": [
+        "段ボール",
+        "ダンボール"
+      ]
+    },
+    {
+      "id": "empty_can",
+      "displayName": "空きかん",
+      "aliases": [
+        "アルミ缶",
+        "スチール缶"
+      ],
+      "keywords": [
+        "空きかん",
+        "アルミ缶",
+        "スチール缶"
+      ]
+    },
+    {
+      "id": "empty_bottle",
+      "displayName": "空きびん",
+      "aliases": [
+        "びん",
+        "ジュースびん",
+        "一升びん",
+        "酒びん"
+      ],
+      "keywords": [
+        "空きびん",
+        "びん",
+        "ジュースびん",
+        "一升びん",
+        "酒びん"
+      ]
+    },
+    {
+      "id": "burnable_waste",
+      "displayName": "燃やすごみ",
+      "aliases": [
+        "可燃ごみ"
+      ],
+      "keywords": [
+        "燃やすごみ",
+        "可燃ごみ",
+        "生ごみ",
+        "紙くず",
+        "木くず",
+        "革類",
+        "ゴムくず"
+      ]
+    },
+    {
+      "id": "nonburnable_waste",
+      "displayName": "不燃物",
+      "aliases": [
+        "不燃ごみ"
+      ],
+      "keywords": [
+        "不燃物",
+        "不燃ごみ",
+        "金属類",
+        "ガラス類",
+        "陶磁器類"
+      ]
+    },
+    {
+      "id": "umbrella",
+      "displayName": "傘",
+      "aliases": [],
+      "keywords": [
+        "傘"
+      ]
+    },
+    {
+      "id": "scissors",
+      "displayName": "はさみ",
+      "aliases": [
+        "ハサミ"
+      ],
+      "keywords": [
+        "はさみ",
+        "ハサミ"
+      ]
+    },
+    {
+      "id": "small_appliance",
+      "displayName": "小型家電",
+      "aliases": [
+        "小型廃家電"
+      ],
+      "keywords": [
+        "小型家電",
+        "小型廃家電",
+        "電話機",
+        "リモコン",
+        "ドライヤー",
+        "炊飯器",
+        "トースター"
+      ]
+    },
+    {
+      "id": "fluorescent_tube",
+      "displayName": "蛍光管",
+      "aliases": [
+        "蛍光灯"
+      ],
+      "keywords": [
+        "蛍光管",
+        "蛍光灯",
+        "廃蛍光管"
+      ]
+    },
+    {
+      "id": "waste_cooking_oil",
+      "displayName": "廃食用油",
+      "aliases": [
+        "使用済み食用油"
+      ],
+      "keywords": [
+        "廃食用油",
+        "使用済み食用油",
+        "食用油"
+      ]
+    },
+    {
+      "id": "paint_can",
+      "displayName": "塗料缶",
+      "aliases": [
+        "塗料スプレー缶",
+        "オイル缶"
+      ],
+      "keywords": [
+        "塗料缶",
+        "塗料スプレー缶",
+        "オイル缶"
+      ]
+    },
+    {
+      "id": "mercury_thermometer",
+      "displayName": "水銀体温計・水銀血圧計",
+      "aliases": [
+        "水銀体温計",
+        "水銀血圧計",
+        "練り朱肉"
+      ],
+      "keywords": [
+        "水銀体温計",
+        "水銀血圧計",
+        "練り朱肉"
+      ]
+    },
+    {
+      "id": "paper_cup_noodles",
+      "displayName": "紙製カップめん容器・ふた",
+      "aliases": [
+        "紙製カップ容器"
+      ],
+      "keywords": [
+        "カップめん容器",
+        "紙製カップめん容器",
+        "紙製容器"
+      ]
+    },
+    {
+      "id": "plastic_cup_noodles",
+      "displayName": "プラスチック製カップめん容器・ふた・包装フィルム",
+      "aliases": [
+        "プラ製カップ容器"
+      ],
+      "keywords": [
+        "プラスチック製カップめん容器",
+        "プラ製カップ容器",
+        "包装フィルム"
+      ]
+    },
+    {
+      "id": "catalog",
+      "displayName": "カタログ",
+      "aliases": [],
+      "keywords": [
+        "カタログ"
+      ]
+    },
+    {
+      "id": "cutter_knife",
+      "displayName": "カッターナイフ",
+      "aliases": [
+        "カッター"
+      ],
+      "keywords": [
+        "カッターナイフ",
+        "カッター"
+      ]
+    },
+    {
+      "id": "cell_phone",
+      "displayName": "携帯電話",
+      "aliases": [
+        "ケータイ"
+      ],
+      "keywords": [
+        "携帯電話",
+        "ケータイ"
+      ]
+    },
+    {
+      "id": "diatomaceous_earth_mat",
+      "displayName": "珪藻土マット",
+      "aliases": [],
+      "keywords": [
+        "珪藻土マット"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "mobile_battery",
+      "categoryName": "特定品目",
+      "instructions": "無色透明または半透明の袋に入れ、「不燃物」の日に指定ごみ袋とは別に出してください。リチウムイオン電池・モバイルバッテリーは市役所環境課窓口でも回収します。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "dry_battery",
+      "categoryName": "特定品目",
+      "instructions": "乾電池・ボタン電池は両面をセロハンテープ等で絶縁し、無色透明または半透明の袋に入れて「不燃物」の日に指定ごみ袋とは別に出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "spray_can",
+      "categoryName": "特定品目",
+      "instructions": "塗料以外のスプレー缶・ガス缶は、風通しが良く火の気のない屋外で中身を空にし、穴は開けずに無色透明または半透明の袋に入れて「不燃物」の日に指定ごみ袋とは別に出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "lighter",
+      "categoryName": "特定品目",
+      "instructions": "中身を使い切ってから、無色透明または半透明の袋に入れて「不燃物」の日に指定ごみ袋とは別に出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "rechargeable_small_appliance",
+      "categoryName": "特定品目",
+      "instructions": "電池類が取り外せない充電式小型家電は、無色透明または半透明の袋に入れて「不燃物」の日に指定ごみ袋とは別に出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "pet_bottle",
+      "categoryName": "資源物 H",
+      "instructions": "PETボトルマークが付いているものに限ります。中をすすいで水切りし、キャップとラベルを外してください。キャップとラベルは「資源物 J」、食用油ボトルは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "milk_carton",
+      "categoryName": "資源物 G",
+      "instructions": "紙パックマークが付いているものに限ります。水洗いし、開いて乾燥させて出してください。プラスチックのキャップは「資源物 J」、受け口は「燃やすごみ」です。内側がアルミコーティングされたものは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "plastic_packaging",
+      "categoryName": "資源物 J",
+      "instructions": "プラマークが付いているプラスチック製容器包装が対象です。中身を使い切り、軽くすすいで出してください。汚れが落ちにくいチューブ類・レトルトパック類・調味料の小袋などは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "styrofoam",
+      "categoryName": "資源物 J",
+      "instructions": "発泡スチロールや緩衝材、果物用ネットは「資源物 J」です。指定ごみ袋に入るサイズに割って出しても構いません。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "newspaper_flyer",
+      "categoryName": "資源物 C",
+      "instructions": "新聞紙と折込みチラシは資源物です。ぬれないようにして出してください。折込みチラシは新聞紙と一緒に入ったものに限ります。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "magazines_paper",
+      "categoryName": "資源物 D",
+      "instructions": "雑誌、本、電話帳、コピー用紙、その他の紙は資源物です。ぬれたものや汚れた紙、防水加工紙、アルミ加工紙、感熱紙、写真などは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "clothes",
+      "categoryName": "資源物 E",
+      "instructions": "衣類、セーター、タオル、毛布、カーテンなどを出せます。中綿や羽毛入りのもの、帽子、革製品、下着類、くつ下は「燃やすごみ」です。ぬれないようにして出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "cardboard",
+      "categoryName": "資源物 F",
+      "instructions": "開いて指定ごみ袋に入る大きさに切るか、小さく折りたたんで出してください。ぬれないようにしてください。指定ごみ袋に入らない場合は直接持ち込みです。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "empty_can",
+      "categoryName": "資源物 A",
+      "instructions": "空きかんは中を洗って出してください。缶・びんは同じ袋に入れて構いません。スプレー缶・ガス缶は「特定品目」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "empty_bottle",
+      "categoryName": "資源物 A",
+      "instructions": "空きびんはふたを外し、中を洗って出してください。ガラスコップや大型びんは「不燃物」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "burnable_waste",
+      "categoryName": "燃やすごみ",
+      "instructions": "生ごみは十分水切りし、木くずは枝の直径10cm以内・長さ50cm以内にして指定ごみ袋に入れて出してください。プラマークのないプラスチック製品や汚れの落ちないプラスチックも燃やすごみです。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "nonburnable_waste",
+      "categoryName": "不燃物",
+      "instructions": "金属類、ガラス類、陶磁器類、小型家電、電球などは不燃物です。割れ物や刃物は新聞紙などで包み「きけん」と書いて出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "umbrella",
+      "categoryName": "不燃物",
+      "instructions": "傘は不燃物です。袋から飛び出さないように折り曲げるなどして出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "scissors",
+      "categoryName": "不燃物",
+      "instructions": "刃の部分を新聞紙などで包み、「きけん」と書いて出してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "small_appliance",
+      "categoryName": "不燃物",
+      "instructions": "小型廃家電は不燃物です。電池類が取り外せる場合は外して「特定品目」で出してください。携帯電話はなるべく販売店等での回収を利用してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "fluorescent_tube",
+      "categoryName": "拠点回収",
+      "instructions": "家庭用蛍光管は、割れないように買った時の容器に入れるなどして、市役所庁舎・各支所の回収ボックスへ出してください。白熱電球・LED電球は「不燃物」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "waste_cooking_oil",
+      "categoryName": "拠点回収",
+      "instructions": "家庭から出る使用済み食用油や期限切れの食用油は、油の容器やペットボトルなど（ガラスびん除く）に入れて拠点回収場所へ持ち込んでください。動物性油・鉱物油は対象外です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "paint_can",
+      "categoryName": "拠点回収",
+      "instructions": "塗料缶・塗料スプレー缶・オイル缶は、家庭で使われたもので使い切っていることが確認できれば、市役所環境課窓口・各支所窓口または環境美化センターで受け入れます。塗料スプレー缶は4リットル以下に限ります。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "mercury_thermometer",
+      "categoryName": "特定品目",
+      "instructions": "割れないよう購入時の容器に入れるか、新聞紙などで包み、「きけん」と書いて透明袋に入れて「不燃物」の日に指定ごみ袋とは別に出してください。拠点回収ボックスへの持ち込みも可能です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "paper_cup_noodles",
+      "categoryName": "燃やすごみ",
+      "instructions": "紙製のカップめん容器やふたは、防水加工されているため、マークがあっても「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "plastic_cup_noodles",
+      "categoryName": "資源物 J",
+      "instructions": "プラスチック製のカップめん容器・ふた・包装フィルムは、軽く洗い流して「資源物 J」で出してください。汚れが落ちないものは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "catalog",
+      "categoryName": "資源物 D",
+      "instructions": "カタログは「資源物 D」です。指定ごみ袋の口を強く縛るなど、雨にぬれない工夫をしてください。ビニール加工されているページは「燃やすごみ」です。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "cutter_knife",
+      "categoryName": "不燃物",
+      "instructions": "刃の部分を新聞紙などで包み、「きけん」と書いて出してください。刃のみを出す場合も同じです。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "cell_phone",
+      "categoryName": "不燃物",
+      "instructions": "携帯電話本体は不燃物です。データは消去して出してください。内蔵バッテリーは「特定品目」として出すか、回収協力店の回収箱を利用してください。"
+    },
+    {
+      "municipalityId": "kumamoto-kikuchi",
+      "itemId": "diatomaceous_earth_mat",
+      "categoryName": "不燃物",
+      "instructions": "アスベストを含んでいない珪藻土マットは、念のため二重のポリ袋に入れて口をしばって出してください。割ったり削ったりしないでください。アスベストを含むものは販売メーカー等の自主回収へ。"
+    }
+  ]
+}
