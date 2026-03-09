@@ -17,7 +17,8 @@
     "check": "biome check --write .",
     "typecheck": "tsc --noEmit",
     "validate-dataset": "tsx scripts/validate-dataset.ts",
-    "validate-dataset:all": "tsx scripts/validate-dataset.ts datasets/*.json"
+    "validate-dataset:all": "tsx scripts/validate-dataset.ts datasets/*.json",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -49,11 +50,14 @@
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
     "zod": "^4.3.6",
-    "zustand": "^5.0.11"
+    "zustand": "^5.0.11",
+    "drizzle-orm": "^0.40.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "babel-plugin-inline-import": "^3.0.0",
     "better-sqlite3": "^11.6.0",
+    "drizzle-kit": "^0.30.0",
     "expo-sqlite-mock": "^3.0.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
@@ -69,6 +73,8 @@
   },
   "private": true,
   "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3"]
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   }
 }
