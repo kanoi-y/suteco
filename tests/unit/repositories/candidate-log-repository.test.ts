@@ -94,15 +94,35 @@ describe("CandidateLogRepository", () => {
     });
 
     it("offset を指定するとスキップされる", async () => {
-      const first = await repository.save(
-        createCandidateLog({ imageUri: "uri1" })
-      );
+      await repository.save(createCandidateLog({ imageUri: "uri1" }));
       await repository.save(createCandidateLog({ imageUri: "uri2" }));
-      await repository.save(createCandidateLog({ imageUri: "uri3" }));
+      const newest = await repository.save(
+        createCandidateLog({ imageUri: "uri3" })
+      );
 
       const offset = await repository.findAll(10, 1);
       expect(offset).toHaveLength(2);
-      expect(offset.some((l) => l.id === first.id)).toBe(false);
+      expect(offset.some((l) => l.id === newest.id)).toBe(false);
+    });
+
+    it("id の降順でソートされてページネーション境界が安定する", async () => {
+      await repository.save(createCandidateLog({ imageUri: "a" }));
+      await repository.save(createCandidateLog({ imageUri: "b" }));
+      await repository.save(createCandidateLog({ imageUri: "c" }));
+
+      const all = await repository.findAll();
+      expect(all[0].imageUri).toBe("c");
+      expect(all[1].imageUri).toBe("b");
+      expect(all[2].imageUri).toBe("a");
+
+      const firstPage = await repository.findAll(2, 0);
+      expect(firstPage).toHaveLength(2);
+      expect(firstPage[0].imageUri).toBe("c");
+      expect(firstPage[1].imageUri).toBe("b");
+
+      const secondPage = await repository.findAll(2, 2);
+      expect(secondPage).toHaveLength(1);
+      expect(secondPage[0].imageUri).toBe("a");
     });
 
     it("0件の場合は空配列を返す", async () => {

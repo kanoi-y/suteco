@@ -1,7 +1,7 @@
 import type { Db } from "@/lib/db/client";
 import { candidateLogs } from "@/lib/db/schema";
 import type { CandidateLog } from "@/types/candidate-log";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 type CandidateLogCreate = Omit<CandidateLog, "id">;
 
@@ -52,7 +52,10 @@ export class CandidateLogRepository {
   }
 
   async findAll(limit?: number, offset?: number): Promise<CandidateLog[]> {
-    const base = this.db.select().from(candidateLogs);
+    const base = this.db
+      .select()
+      .from(candidateLogs)
+      .orderBy(desc(candidateLogs.id));
     const rows =
       limit != null && offset != null
         ? await base.limit(limit).offset(offset)
