@@ -1,79 +1,73 @@
-import * as SQLite from 'expo-sqlite';
-import { initDatabase } from '@/lib/db/schema';
+import { migrate } from "drizzle-orm/expo-sqlite/migrator";
+import migrations from "../../drizzle/migrations";
+import { openTestDb } from "../helpers/db";
 
 const REQUIRED_TABLES = [
-  'municipalities',
-  'items',
-  'disposal_rules',
-  'candidate_logs',
+  "municipalities",
+  "items",
+  "disposal_rules",
+  "candidate_logs",
 ] as const;
 
 const REQUIRED_INDEXES = [
-  'idx_disposal_rules_municipality_item',
-  'idx_items_display_name',
+  "idx_disposal_rules_municipality_item",
+  "idx_items_display_name",
 ] as const;
 
-async function openTestDb(): Promise<SQLite.SQLiteDatabase> {
-  const dbName = `db_schema_test_${process.env.JEST_WORKER_ID ?? 0}_${Date.now()}`;
-  return SQLite.openDatabaseAsync(dbName);
-}
-
-function getTableNames(db: SQLite.SQLiteDatabase): string[] {
-  const rows = db.getAllSync<{ name: string }>(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+function getTableNames(expoDb: { getAllSync: (sql: string) => { name: string }[] }): string[] {
+  const rows = expoDb.getAllSync(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
   );
   return rows.map((r) => r.name);
 }
 
-function getIndexNames(db: SQLite.SQLiteDatabase): string[] {
-  const rows = db.getAllSync<{ name: string }>(
-    "SELECT name FROM sqlite_master WHERE type='index' AND name NOT LIKE 'sqlite_%'",
+function getIndexNames(expoDb: { getAllSync: (sql: string) => { name: string }[] }): string[] {
+  const rows = expoDb.getAllSync(
+    "SELECT name FROM sqlite_master WHERE type='index' AND name NOT LIKE 'sqlite_%'"
   );
   return rows.map((r) => r.name);
 }
 
-describe('initDatabase', () => {
-  describe('tables 作成テスト', () => {
-    it('必要な4テーブルが作成される', async () => {
-      const db = await openTestDb();
-      await initDatabase(db);
+describe("Drizzle migrations", () => {
+  describe("tables 作成テスト", () => {
+    it("必要な4テーブルが作成される", async () => {
+      const { expoDb } = await openTestDb("db_schema_tables");
 
-      const tableNames = getTableNames(db);
+      const tableNames = getTableNames(expoDb);
       for (const table of REQUIRED_TABLES) {
         expect(tableNames).toContain(table);
       }
 
-      await db.closeAsync();
+      await expoDb.closeAsync();
     });
   });
 
-  describe('index 作成テスト', () => {
-    it('必要な2インデックスが作成される', async () => {
-      const db = await openTestDb();
-      await initDatabase(db);
+  describe("index 作成テスト", () => {
+    it("必要な2インデックスが作成される", async () => {
+      const { expoDb } = await openTestDb("db_schema_indexes");
 
-      const indexNames = getIndexNames(db);
+      const indexNames = getIndexNames(expoDb);
       for (const index of REQUIRED_INDEXES) {
         expect(indexNames).toContain(index);
       }
 
-      await db.closeAsync();
+      await expoDb.closeAsync();
     });
   });
 
-  describe('初期化後に再実行しても壊れないテスト', () => {
-    it('initDatabase を2回実行してもエラーにならず、テーブル数は変わらない', async () => {
-      const db = await openTestDb();
-      await initDatabase(db);
-      const tableCountAfterFirst = getTableNames(db).length;
+  describe("初期化後に再実行しても壊れないテスト", () => {
+    it("migration を2回実行してもエラーにならず、テーブル数は変わらない", async () => {
+      const { expoDb, db } = await openTestDb("db_schema_idempotent");
 
-      await initDatabase(db);
-      const tableCountAfterSecond = getTableNames(db).length;
+      const tableCountAfterFirst = getTableNames(expoDb).length;
+      expect(tableCountAfterFirst).toBeGreaterThanOrEqual(REQUIRED_TABLES.length);
+
+      await migrate(db, migrations);
+      const tableCountAfterSecond = getTableNames(expoDb).length;
 
       expect(tableCountAfterSecond).toBe(tableCountAfterFirst);
-      expect(tableCountAfterSecond).toBe(REQUIRED_TABLES.length);
 
-      await db.closeAsync();
+      await expoDb.closeAsync();
     });
   });
 });
