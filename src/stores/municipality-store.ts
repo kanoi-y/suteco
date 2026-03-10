@@ -44,6 +44,8 @@ export const useMunicipalityStore = create<MunicipalityState & MunicipalityActio
           selectedMunicipalityName: municipality.displayName,
           datasetVersion: municipality.version,
         });
+      } else {
+        set(initialState);
       }
     },
     clearMunicipality: () => {

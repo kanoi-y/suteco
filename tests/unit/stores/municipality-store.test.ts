@@ -86,5 +86,24 @@ describe("municipalityStore", () => {
       expect(state.selectedMunicipalityName).toBe("秋田県横手市");
       expect(state.datasetVersion).toBe("2026-03-01");
     });
+
+    it("該当する自治体が見つからない場合、選択状態がクリアされること", async () => {
+      const { setMunicipality } = useMunicipalityStore.getState();
+      setMunicipality({
+        id: "previous-city",
+        displayName: "前の市",
+        version: "2026-01-01",
+      });
+
+      mockFindById.mockResolvedValue(null);
+
+      const { loadMunicipality } = useMunicipalityStore.getState();
+      await loadMunicipality("not-found-city");
+
+      const state = useMunicipalityStore.getState();
+      expect(state.selectedMunicipalityId).toBeNull();
+      expect(state.selectedMunicipalityName).toBeNull();
+      expect(state.datasetVersion).toBeNull();
+    });
   });
 });
