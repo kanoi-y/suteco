@@ -13,15 +13,35 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // expo-router mock
-jest.mock('expo-router', () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-  })),
-  useLocalSearchParams: jest.fn(() => ({})),
-  Link: ({ children }: { children: React.ReactNode }) => children,
-  Stack: {
-    Screen: jest.fn(() => null),
-  },
-}));
+const { mockRouter } = require('./helpers/expo-router-mock');
+
+jest.mock('expo-router', () => {
+  const React = require('react');
+  const { Pressable } = require('react-native');
+  return {
+    useRouter: () => mockRouter,
+    useLocalSearchParams: jest.fn(() => ({})),
+    Link: ({
+      children,
+      href,
+      asChild,
+      ...rest
+    }: {
+      children: React.ReactNode;
+      href: string;
+      asChild?: boolean;
+    }) => {
+      const handlePress = () => mockRouter.push(href);
+      if (asChild && React.Children.only(children)) {
+        return React.cloneElement(
+          children as React.ReactElement,
+          { ...rest, onPress: handlePress }
+        );
+      }
+      return React.createElement(Pressable, { ...rest, onPress: handlePress }, children);
+    },
+    Stack: {
+      Screen: jest.fn(() => null),
+    },
+  };
+});
