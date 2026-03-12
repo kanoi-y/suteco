@@ -41,16 +41,21 @@ export const useMunicipalityStore = create<MunicipalityState & MunicipalityActio
         });
       },
       loadMunicipality: async (municipalityId) => {
-        const db = getDb();
-        const repository = new MunicipalityRepository(db);
-        const municipality = await repository.findById(municipalityId);
-        if (municipality) {
-          set({
-            selectedMunicipalityId: municipality.id,
-            selectedMunicipalityName: municipality.displayName,
-            datasetVersion: municipality.version,
-          });
-        } else {
+        try {
+          const db = getDb();
+          const repository = new MunicipalityRepository(db);
+          const municipality = await repository.findById(municipalityId);
+          if (municipality) {
+            set({
+              selectedMunicipalityId: municipality.id,
+              selectedMunicipalityName: municipality.displayName,
+              datasetVersion: municipality.version,
+            });
+          } else {
+            set((s) => ({ ...initialState, _hasHydrated: s._hasHydrated }));
+          }
+        } catch (error) {
+          console.error('Failed to validate municipality:', error);
           set((s) => ({ ...initialState, _hasHydrated: s._hasHydrated }));
         }
       },

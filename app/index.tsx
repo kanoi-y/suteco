@@ -3,22 +3,39 @@ import { ScreenContainer } from '@/components/ScreenContainer';
 import { useMunicipalityStore } from '@/stores/municipality-store';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
   const selectedMunicipality = useMunicipalityStore();
   const _hasHydrated = selectedMunicipality._hasHydrated;
+  const [isValidating, setIsValidating] = useState(true);
 
   useEffect(() => {
     if (!_hasHydrated) return;
-    if (selectedMunicipality.selectedMunicipalityId === null) {
-      router.replace('/municipalities');
-    }
-  }, [_hasHydrated, selectedMunicipality.selectedMunicipalityId, router]);
 
-  if (!_hasHydrated) {
+    let isMounted = true;
+    const validate = async () => {
+      if (selectedMunicipality.selectedMunicipalityId === null) {
+        if (isMounted) setIsValidating(false);
+        router.replace('/municipalities');
+        return;
+      }
+
+      // DBに存在するか検証し、最新のname/versionに同期。無効ならstateをクリア。
+      await selectedMunicipality.loadMunicipality(selectedMunicipality.selectedMunicipalityId);
+      if (isMounted) setIsValidating(false);
+    };
+
+    validate();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [_hasHydrated, selectedMunicipality.selectedMunicipalityId, router, selectedMunicipality.loadMunicipality]);
+
+  if (!_hasHydrated || isValidating) {
     return null;
   }
 
