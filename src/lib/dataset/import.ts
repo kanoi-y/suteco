@@ -95,3 +95,35 @@ export async function importDataset(db: Db, dataset: MunicipalityDataset): Promi
       );
   });
 }
+
+/**
+ * 同梱データセットから削除された自治体と、それに紐づくルール・孤立品目を削除する。
+ * 起動時の初期化で、defaultDatasets に含まれない自治体を DB から取り除くために使用する。
+ *
+ * @param db - Drizzle DB インスタンス
+ * @param validIds - 有効な（同梱に含まれる）自治体 ID のリスト
+ */
+export async function pruneUnbundledMunicipalities(db: Db, validIds: string[]): Promise<void> {
+  await db.transaction(async (tx) => {
+    if (validIds.length === 0) {
+      await tx.delete(disposalRules);
+      await tx.delete(municipalities);
+      await tx.delete(items);
+      return;
+    }
+
+    await tx
+      .delete(disposalRules)
+      .where(notInArray(disposalRules.municipalityId, validIds));
+
+    await tx
+      .delete(municipalities)
+      .where(notInArray(municipalities.id, validIds));
+
+    await tx
+      .delete(items)
+      .where(
+        sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`
+      );
+  });
+}

@@ -1,5 +1,5 @@
 import { defaultDatasets } from '@/lib/datasets';
-import { importDataset } from '@/lib/dataset/import';
+import { importDataset, pruneUnbundledMunicipalities } from '@/lib/dataset/import';
 import { getDb } from '@/lib/db/client';
 import migrations from '../../drizzle/migrations';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
@@ -38,6 +38,10 @@ export function InitializationProvider({ children }: InitializationProviderProps
           await importDataset(db, dataset);
         }
       }
+
+      const validIds = defaultDatasets.map((d) => d.municipality.id);
+      await pruneUnbundledMunicipalities(db, validIds);
+
       setInitState('done');
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));

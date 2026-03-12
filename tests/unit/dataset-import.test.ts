@@ -1,4 +1,4 @@
-import { importDataset } from '@/lib/dataset/import';
+import { importDataset, pruneUnbundledMunicipalities } from '@/lib/dataset/import';
 import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 import { openTestDb } from '../helpers/db';
 
@@ -212,5 +212,90 @@ describe('importDataset', () => {
 
       await expoDb.closeAsync();
     });
+  });
+});
+
+describe('pruneUnbundledMunicipalities', () => {
+  function createDataset(municipalityId: string, displayName: string): MunicipalityDataset {
+    return {
+      municipality: {
+        id: municipalityId,
+        displayName,
+        version: '2025-01-01',
+      },
+      items: [
+        {
+          id: `${municipalityId}_item`,
+          displayName: '品目',
+          aliases: [],
+          keywords: [],
+        },
+      ],
+      rules: [
+        {
+          municipalityId,
+          itemId: `${municipalityId}_item`,
+          categoryName: '燃やすごみ',
+          instructions: '指定袋へ',
+        },
+      ],
+    };
+  }
+
+  it('validIds に含まれない自治体と紐づくルール・孤立品目が削除される', async () => {
+    const { expoDb, db } = await openTestDb('prune_unbundled');
+
+    await importDataset(db, createDataset('city-a', 'A市'));
+    await importDataset(db, createDataset('city-b', 'B市'));
+    await importDataset(db, createDataset('city-c', 'C市'));
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(3);
+    expect(getRowCount(expoDb, 'items')).toBe(3);
+    expect(getRowCount(expoDb, 'disposal_rules')).toBe(3);
+
+    await pruneUnbundledMunicipalities(db, ['city-a', 'city-c']);
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(2);
+    expect(getRowCount(expoDb, 'items')).toBe(2);
+    expect(getRowCount(expoDb, 'disposal_rules')).toBe(2);
+
+    const remaining = expoDb.getAllSync<{ id: string }>('SELECT id FROM municipalities ORDER BY id');
+    expect(remaining.map((r) => r.id)).toEqual(['city-a', 'city-c']);
+
+    await expoDb.closeAsync();
+  });
+
+  it('validIds が空の場合、全テーブルが空になる', async () => {
+    const { expoDb, db } = await openTestDb('prune_empty');
+
+    await importDataset(db, createDataset('city-x', 'X市'));
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(1);
+    expect(getRowCount(expoDb, 'items')).toBe(1);
+    expect(getRowCount(expoDb, 'disposal_rules')).toBe(1);
+
+    await pruneUnbundledMunicipalities(db, []);
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(0);
+    expect(getRowCount(expoDb, 'items')).toBe(0);
+    expect(getRowCount(expoDb, 'disposal_rules')).toBe(0);
+
+    await expoDb.closeAsync();
+  });
+
+  it('全自治体が validIds に含まれる場合、削除されない', async () => {
+    const { expoDb, db } = await openTestDb('prune_noop');
+
+    await importDataset(db, createDataset('city-p', 'P市'));
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(1);
+
+    await pruneUnbundledMunicipalities(db, ['city-p']);
+
+    expect(getRowCount(expoDb, 'municipalities')).toBe(1);
+    expect(getRowCount(expoDb, 'items')).toBe(1);
+    expect(getRowCount(expoDb, 'disposal_rules')).toBe(1);
+
+    await expoDb.closeAsync();
   });
 });

@@ -5,12 +5,18 @@ import { defaultDatasets } from '@/lib/datasets';
 import { getDb } from '@/lib/db/client';
 import { importDataset } from '@/lib/dataset/import';
 import { openTestDb } from '../helpers/db';
+import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 
 const mockImportDataset = jest.mocked(importDataset);
 
-jest.mock('@/lib/dataset/import', () => ({
-  importDataset: jest.fn().mockResolvedValue(undefined),
-}));
+jest.mock('@/lib/dataset/import', () => {
+  const actual =
+    jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
+  return {
+    ...actual,
+    importDataset: jest.fn().mockResolvedValue(undefined),
+  };
+});
 
 jest.mock('@/lib/db/client', () => ({
   ...jest.requireActual<typeof import('@/lib/db/client')>('@/lib/db/client'),
@@ -124,6 +130,78 @@ describe('初回起動時の import 導線', () => {
 
       expect(mockImportDataset).not.toHaveBeenCalled();
       expect(screen.queryByText('初期設定中...')).toBeNull();
+
+      await expoDb.closeAsync();
+    });
+  });
+
+  describe('同梱削除時の pruning', () => {
+    const removedCityDataset: MunicipalityDataset = {
+      municipality: {
+        id: 'removed-city',
+        displayName: '削除された市',
+        version: '2025-01-01',
+      },
+      items: [
+        {
+          id: 'removed_item',
+          displayName: '品目',
+          aliases: [],
+          keywords: [],
+        },
+      ],
+      rules: [
+        {
+          municipalityId: 'removed-city',
+          itemId: 'removed_item',
+          categoryName: '燃やすごみ',
+          instructions: '指定袋へ',
+        },
+      ],
+    };
+
+    it('同梱から外れた自治体が起動時に削除される', async () => {
+      const { expoDb, db } = await openTestDb('prune_on_startup');
+
+      const { importDataset: realImportDataset } =
+        jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
+
+      for (const dataset of defaultDatasets) {
+        await realImportDataset(db, dataset);
+      }
+      await realImportDataset(db, removedCityDataset);
+
+      const countBefore = expoDb.getAllSync<{ count: number }>(
+        'SELECT COUNT(*) as count FROM municipalities'
+      )[0]?.count ?? 0;
+      expect(countBefore).toBe(defaultDatasets.length + 1);
+
+      const hasRemovedBefore = expoDb
+        .getAllSync<{ id: string }>('SELECT id FROM municipalities')
+        .some((r) => r.id === 'removed-city');
+      expect(hasRemovedBefore).toBe(true);
+
+      mockGetDb.mockReturnValue(db);
+
+      render(
+        <InitializationProvider>
+          <MainContent />
+        </InitializationProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('メインコンテンツ')).toBeTruthy();
+      });
+
+      const countAfter = expoDb.getAllSync<{ count: number }>(
+        'SELECT COUNT(*) as count FROM municipalities'
+      )[0]?.count ?? 0;
+      expect(countAfter).toBe(defaultDatasets.length);
+
+      const hasRemovedAfter = expoDb
+        .getAllSync<{ id: string }>('SELECT id FROM municipalities')
+        .some((r) => r.id === 'removed-city');
+      expect(hasRemovedAfter).toBe(false);
 
       await expoDb.closeAsync();
     });
