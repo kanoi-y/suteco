@@ -22,6 +22,7 @@ function MunicipalitiesContent({
   const municipalities = use(municipalityPromise);
   const router = useRouter();
   const setMunicipality = useMunicipalityStore((s) => s.setMunicipality);
+  const selectedMunicipalityId = useMunicipalityStore((s) => s.selectedMunicipalityId);
 
   const handleSelect = (municipality: Municipality) => {
     Alert.alert('自治体を選択', `${municipality.displayName} を選択しますか？`, [
@@ -44,15 +45,21 @@ function MunicipalitiesContent({
     <FlatList
       data={municipalities}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => handleSelect(item)}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.itemText}>{item.displayName}</Text>
-        </TouchableOpacity>
-      )}
+      renderItem={({ item }) => {
+        const isSelected = item.id === selectedMunicipalityId;
+        return (
+          <TouchableOpacity
+            style={[styles.item, isSelected && styles.selectedItem]}
+            onPress={() => handleSelect(item)}
+            activeOpacity={0.7}
+            disabled={isSelected}
+          >
+            <Text style={[styles.itemText, isSelected && styles.selectedItemText]}>
+              {item.displayName}
+            </Text>
+          </TouchableOpacity>
+        );
+      }}
     />
   );
 }
@@ -84,8 +91,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
+  selectedItem: {
+    backgroundColor: '#f0f9ff',
+    borderColor: '#0066cc',
+  },
   itemText: {
     fontSize: 16,
     color: '#333',
+  },
+  selectedItemText: {
+    color: '#0066cc',
+    fontWeight: 'bold',
   },
 });

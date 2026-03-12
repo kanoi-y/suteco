@@ -1,3 +1,6 @@
+// require.context のランタイム実装（Jest 用）
+require('babel-plugin-require-context-hook/register')();
+
 module.exports = {
   preset: 'jest-expo',
   setupFilesAfterEnv: ['expo-sqlite-mock/src/setup.ts', '<rootDir>/tests/setup.ts'],

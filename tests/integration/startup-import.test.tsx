@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { InitializationProvider } from '@/components/InitializationProvider';
+import { defaultDatasets } from '@/lib/datasets';
 import { getDb } from '@/lib/db/client';
 import { importDataset } from '@/lib/dataset/import';
-import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 import { openTestDb } from '../helpers/db';
 
 const mockImportDataset = jest.mocked(importDataset);
@@ -18,32 +18,6 @@ jest.mock('@/lib/db/client', () => ({
 }));
 
 const mockGetDb = jest.mocked(getDb);
-
-function createValidDataset(): MunicipalityDataset {
-  return {
-    municipality: {
-      id: 'test-city',
-      displayName: 'テスト市',
-      version: '2025-01-01',
-    },
-    items: [
-      {
-        id: 'item_a',
-        displayName: '品目A',
-        aliases: ['エイリアスA'],
-        keywords: ['キーワードA'],
-      },
-    ],
-    rules: [
-      {
-        municipalityId: 'test-city',
-        itemId: 'item_a',
-        categoryName: '資源物',
-        instructions: '洗って出してください。',
-      },
-    ],
-  };
-}
 
 const MainContent = () => <Text>メインコンテンツ</Text>;
 
@@ -64,7 +38,7 @@ describe('初回起動時の import 導線', () => {
       );
 
       await waitFor(() => {
-        expect(mockImportDataset).toHaveBeenCalledTimes(1);
+        expect(mockImportDataset).toHaveBeenCalledTimes(defaultDatasets.length);
       });
 
       await waitFor(() => {
@@ -124,11 +98,12 @@ describe('初回起動時の import 導線', () => {
   describe('再起動時', () => {
     it('import が二重投入されず、即座にメインコンテンツが表示される', async () => {
       const { expoDb, db } = await openTestDb('restart');
-      const dataset = createValidDataset();
 
       const { importDataset: realImportDataset } =
         jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
-      await realImportDataset(db, dataset);
+      for (const dataset of defaultDatasets) {
+        await realImportDataset(db, dataset);
+      }
 
       mockGetDb.mockReturnValue(db);
       mockImportDataset.mockClear();

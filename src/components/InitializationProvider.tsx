@@ -1,15 +1,12 @@
+import { defaultDatasets } from '@/lib/datasets';
 import { importDataset } from '@/lib/dataset/import';
 import { getDb } from '@/lib/db/client';
 import migrations from '../../drizzle/migrations';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { municipalities } from '@/lib/db/schema';
-import { sql } from 'drizzle-orm';
-import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Text, View } from 'react-native';
-
-const defaultDataset = require('@datasets/kumamoto-kikuchi-dataset.json') as MunicipalityDataset;
 
 interface InitializationProviderProps {
   children: ReactNode;
@@ -33,11 +30,13 @@ export function InitializationProvider({ children }: InitializationProviderProps
     setError(null);
 
     try {
-      const result = await db.select({ count: sql<number>`count(*)` }).from(municipalities);
-      const count = result[0]?.count ?? 0;
+      const existingMunicipalities = await db.select().from(municipalities);
 
-      if (count === 0) {
-        await importDataset(db, defaultDataset);
+      for (const dataset of defaultDatasets) {
+        const exists = existingMunicipalities.find((m) => m.id === dataset.municipality.id);
+        if (!exists || exists.version !== dataset.municipality.version) {
+          await importDataset(db, dataset);
+        }
       }
       setInitState('done');
     } catch (e) {
