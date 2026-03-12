@@ -48,3 +48,21 @@ jest.mock('expo-router', () => {
     },
   };
 });
+
+// __requireContext の ReferenceError 回避のため、datasets をモック化
+jest.mock('@/lib/datasets', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const datasetsDir = path.resolve(__dirname, '../datasets');
+
+  let files: string[] = [];
+  if (fs.existsSync(datasetsDir)) {
+    files = fs.readdirSync(datasetsDir).filter((f: string) => f.endsWith('.json'));
+  }
+
+  const defaultDatasets = files.map((file: string) => {
+    return JSON.parse(fs.readFileSync(path.join(datasetsDir, file), 'utf8'));
+  });
+
+  return { defaultDatasets };
+});
