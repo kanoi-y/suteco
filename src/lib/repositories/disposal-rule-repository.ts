@@ -1,7 +1,7 @@
-import type { Db } from "@/lib/db/client";
-import { disposalRules } from "@/lib/db/schema";
-import type { DisposalRule } from "@/schema/municipality-dataset-schema";
-import { and, eq } from "drizzle-orm";
+import type { Db } from '@/lib/db/client';
+import { disposalRules } from '@/lib/db/schema';
+import type { DisposalRule } from '@/schema/municipality-dataset-schema';
+import { and, eq } from 'drizzle-orm';
 
 /**
  * 分別ルールデータの永続化を行う Repository
@@ -39,10 +39,7 @@ export class DisposalRuleRepository {
       .select()
       .from(disposalRules)
       .where(
-        and(
-          eq(disposalRules.municipalityId, municipalityId),
-          eq(disposalRules.itemId, itemId)
-        )
+        and(eq(disposalRules.municipalityId, municipalityId), eq(disposalRules.itemId, itemId))
       )
       .limit(1);
     const row = rows[0];

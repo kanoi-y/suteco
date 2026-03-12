@@ -1,7 +1,4 @@
-import type {
-  Municipality,
-  MunicipalityDataset,
-} from '@/schema/municipality-dataset-schema';
+import type { Municipality, MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 
 function loadMunicipalityDatasetSchema() {
   try {
@@ -12,7 +9,7 @@ function loadMunicipalityDatasetSchema() {
     };
   } catch {
     throw new Error(
-      'municipalityDatasetSchema is not implemented yet. Create src/schema/municipality-dataset-schema.ts and export municipalityDatasetSchema.',
+      'municipalityDatasetSchema is not implemented yet. Create src/schema/municipality-dataset-schema.ts and export municipalityDatasetSchema.'
     );
   }
 }

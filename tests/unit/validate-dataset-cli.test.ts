@@ -8,18 +8,13 @@ function loadCLI(): { main: (argv: string[]) => void } {
       main?: (argv: string[]) => void;
     };
     if (typeof mod.main !== 'function') {
-      throw new Error(
-        'scripts/validate-dataset.ts に main 関数がエクスポートされていません。',
-      );
+      throw new Error('scripts/validate-dataset.ts に main 関数がエクスポートされていません。');
     }
     return { main: mod.main };
   } catch (err) {
-    const msg =
-      err instanceof Error
-        ? err.message
-        : String(err);
+    const msg = err instanceof Error ? err.message : String(err);
     throw new Error(
-      `dataset 検証 CLI が未実装です。scripts/validate-dataset.ts を作成し main 関数をエクスポートしてください。原因: ${msg}`,
+      `dataset 検証 CLI が未実装です。scripts/validate-dataset.ts を作成し main 関数をエクスポートしてください。原因: ${msg}`
     );
   }
 }
@@ -103,9 +98,11 @@ describe('validate-dataset CLI', () => {
   let errorSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    exitSpy = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined) => {
-      throw new Error(`process.exit(${code ?? 0})`);
-    });
+    exitSpy = jest
+      .spyOn(process, 'exit')
+      .mockImplementation((code?: string | number | null | undefined) => {
+        throw new Error(`process.exit(${code ?? 0})`);
+      });
     logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -137,7 +134,7 @@ describe('validate-dataset CLI', () => {
     it('スキーマ違反の JSON を渡すと process.exit(1) が呼ばれる', () => {
       const { main } = loadCLI();
       expect(() => main(['node', 'validate-dataset', invalidFilePath])).toThrow(
-        /process\.exit\(1\)/,
+        /process\.exit\(1\)/
       );
       expect(exitSpy).toHaveBeenCalledWith(1);
     });
@@ -153,18 +150,14 @@ describe('validate-dataset CLI', () => {
       }
       expect(errorSpy).toHaveBeenCalled();
       const errorOutput = errorSpy.mock.calls.flat().join(' ');
-      expect(errorOutput).toMatch(
-        /items\.id|rules\.itemId|Required|検証|エラー|失敗/i,
-      );
+      expect(errorOutput).toMatch(/items\.id|rules\.itemId|Required|検証|エラー|失敗/i);
     });
   });
 
   describe('引数エラー', () => {
     it('ファイルパス未指定時に process.exit(1) と使用方法が出力される', () => {
       const { main } = loadCLI();
-      expect(() => main(['node', 'validate-dataset'])).toThrow(
-        /process\.exit\(1\)/,
-      );
+      expect(() => main(['node', 'validate-dataset'])).toThrow(/process\.exit\(1\)/);
       expect(exitSpy).toHaveBeenCalledWith(1);
       const errorOutput = errorSpy.mock.calls.flat().join(' ');
       expect(errorOutput).toMatch(/使用方法|usage|引数|Usage|ファイル/i);
@@ -175,9 +168,7 @@ describe('validate-dataset CLI', () => {
     it('存在しないファイルパス指定時に process.exit(1) とエラーメッセージが出力される', () => {
       const { main } = loadCLI();
       const notExistPath = path.join(tempDir, 'not-exist.json');
-      expect(() => main(['node', 'validate-dataset', notExistPath])).toThrow(
-        /process\.exit\(1\)/,
-      );
+      expect(() => main(['node', 'validate-dataset', notExistPath])).toThrow(/process\.exit\(1\)/);
       expect(exitSpy).toHaveBeenCalledWith(1);
       expect(errorSpy).toHaveBeenCalled();
       const errorOutput = errorSpy.mock.calls.flat().join(' ');

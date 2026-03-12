@@ -1,11 +1,7 @@
-import type { Db } from "@/lib/db/client";
-import {
-  disposalRules,
-  items,
-  municipalities,
-} from "@/lib/db/schema";
-import { municipalityDatasetSchema } from "@/schema/municipality-dataset-schema";
-import type { MunicipalityDataset } from "@/schema/municipality-dataset-schema";
+import type { Db } from '@/lib/db/client';
+import { disposalRules, items, municipalities } from '@/lib/db/schema';
+import { municipalityDatasetSchema } from '@/schema/municipality-dataset-schema';
+import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 
 /**
  * 自治体データセットを DB に取り込む。
@@ -15,10 +11,7 @@ import type { MunicipalityDataset } from "@/schema/municipality-dataset-schema";
  * @param db - Drizzle DB インスタンス
  * @param dataset - 取り込むデータセット（Zod でバリデーションする）
  */
-export async function importDataset(
-  db: Db,
-  dataset: MunicipalityDataset
-): Promise<void> {
+export async function importDataset(db: Db, dataset: MunicipalityDataset): Promise<void> {
   const parsed = municipalityDatasetSchema.parse(dataset);
 
   await db.transaction(async (tx) => {

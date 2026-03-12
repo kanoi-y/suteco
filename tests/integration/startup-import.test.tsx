@@ -1,19 +1,19 @@
-import { render, screen, waitFor } from "@testing-library/react-native";
-import { Text } from "react-native";
-import { InitializationProvider } from "@/components/InitializationProvider";
-import { getDb } from "@/lib/db/client";
-import { importDataset } from "@/lib/dataset/import";
-import type { MunicipalityDataset } from "@/schema/municipality-dataset-schema";
-import { openTestDb } from "../helpers/db";
+import { render, screen, waitFor } from '@testing-library/react-native';
+import { Text } from 'react-native';
+import { InitializationProvider } from '@/components/InitializationProvider';
+import { getDb } from '@/lib/db/client';
+import { importDataset } from '@/lib/dataset/import';
+import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
+import { openTestDb } from '../helpers/db';
 
 const mockImportDataset = jest.mocked(importDataset);
 
-jest.mock("@/lib/dataset/import", () => ({
+jest.mock('@/lib/dataset/import', () => ({
   importDataset: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock("@/lib/db/client", () => ({
-  ...jest.requireActual<typeof import("@/lib/db/client")>("@/lib/db/client"),
+jest.mock('@/lib/db/client', () => ({
+  ...jest.requireActual<typeof import('@/lib/db/client')>('@/lib/db/client'),
   getDb: jest.fn(),
 }));
 
@@ -22,24 +22,24 @@ const mockGetDb = jest.mocked(getDb);
 function createValidDataset(): MunicipalityDataset {
   return {
     municipality: {
-      id: "test-city",
-      displayName: "テスト市",
-      version: "2025-01-01",
+      id: 'test-city',
+      displayName: 'テスト市',
+      version: '2025-01-01',
     },
     items: [
       {
-        id: "item_a",
-        displayName: "品目A",
-        aliases: ["エイリアスA"],
-        keywords: ["キーワードA"],
+        id: 'item_a',
+        displayName: '品目A',
+        aliases: ['エイリアスA'],
+        keywords: ['キーワードA'],
       },
     ],
     rules: [
       {
-        municipalityId: "test-city",
-        itemId: "item_a",
-        categoryName: "資源物",
-        instructions: "洗って出してください。",
+        municipalityId: 'test-city',
+        itemId: 'item_a',
+        categoryName: '資源物',
+        instructions: '洗って出してください。',
       },
     ],
   };
@@ -47,14 +47,14 @@ function createValidDataset(): MunicipalityDataset {
 
 const MainContent = () => <Text>メインコンテンツ</Text>;
 
-describe("初回起動時の import 導線", () => {
+describe('初回起動時の import 導線', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("初回起動時", () => {
-    it("import が走り、ローディング表示後にメインコンテンツが表示される", async () => {
-      const { expoDb, db } = await openTestDb("first_startup");
+  describe('初回起動時', () => {
+    it('import が走り、ローディング表示後にメインコンテンツが表示される', async () => {
+      const { expoDb, db } = await openTestDb('first_startup');
       mockGetDb.mockReturnValue(db);
 
       render(
@@ -68,17 +68,17 @@ describe("初回起動時の import 導線", () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText("メインコンテンツ")).toBeTruthy();
+        expect(screen.getByText('メインコンテンツ')).toBeTruthy();
       });
 
       await expoDb.closeAsync();
     });
   });
 
-  describe("初期化失敗時", () => {
-    it("getDb が例外を投げる場合、レンダリング時にエラーになる", () => {
+  describe('初期化失敗時', () => {
+    it('getDb が例外を投げる場合、レンダリング時にエラーになる', () => {
       mockGetDb.mockImplementation(() => {
-        throw new Error("DB init failed");
+        throw new Error('DB init failed');
       });
 
       expect(() =>
@@ -87,13 +87,13 @@ describe("初回起動時の import 導線", () => {
             <MainContent />
           </InitializationProvider>
         )
-      ).toThrow("DB init failed");
+      ).toThrow('DB init failed');
     });
 
-    it("importDataset が失敗するとエラー画面が表示され、メインコンテンツは表示されない", async () => {
-      const { expoDb, db } = await openTestDb("import_fail");
+    it('importDataset が失敗するとエラー画面が表示され、メインコンテンツは表示されない', async () => {
+      const { expoDb, db } = await openTestDb('import_fail');
       mockGetDb.mockReturnValue(db);
-      mockImportDataset.mockRejectedValue(new Error("Invalid bundled data"));
+      mockImportDataset.mockRejectedValue(new Error('Invalid bundled data'));
 
       render(
         <InitializationProvider>
@@ -102,34 +102,32 @@ describe("初回起動時の import 導線", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("マイグレーション中...")).toBeTruthy();
+        expect(screen.getByText('マイグレーション中...')).toBeTruthy();
       });
 
       await waitFor(() => {
-        expect(screen.getByText("初期設定中...")).toBeTruthy();
+        expect(screen.getByText('初期設定中...')).toBeTruthy();
       });
 
       await waitFor(() => {
-        expect(screen.getByText("初期化に失敗しました")).toBeTruthy();
+        expect(screen.getByText('初期化に失敗しました')).toBeTruthy();
       });
 
-      expect(screen.getByText("Invalid bundled data")).toBeTruthy();
-      expect(screen.getByRole("button", { name: "再試行" })).toBeTruthy();
-      expect(screen.queryByText("メインコンテンツ")).toBeNull();
+      expect(screen.getByText('Invalid bundled data')).toBeTruthy();
+      expect(screen.getByRole('button', { name: '再試行' })).toBeTruthy();
+      expect(screen.queryByText('メインコンテンツ')).toBeNull();
 
       await expoDb.closeAsync();
     });
   });
 
-  describe("再起動時", () => {
-    it("import が二重投入されず、即座にメインコンテンツが表示される", async () => {
-      const { expoDb, db } = await openTestDb("restart");
+  describe('再起動時', () => {
+    it('import が二重投入されず、即座にメインコンテンツが表示される', async () => {
+      const { expoDb, db } = await openTestDb('restart');
       const dataset = createValidDataset();
 
       const { importDataset: realImportDataset } =
-        jest.requireActual<typeof import("@/lib/dataset/import")>(
-          "@/lib/dataset/import"
-        );
+        jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
       await realImportDataset(db, dataset);
 
       mockGetDb.mockReturnValue(db);
@@ -142,15 +140,15 @@ describe("初回起動時の import 導線", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("マイグレーション中...")).toBeTruthy();
+        expect(screen.getByText('マイグレーション中...')).toBeTruthy();
       });
 
       await waitFor(() => {
-        expect(screen.getByText("メインコンテンツ")).toBeTruthy();
+        expect(screen.getByText('メインコンテンツ')).toBeTruthy();
       });
 
       expect(mockImportDataset).not.toHaveBeenCalled();
-      expect(screen.queryByText("初期設定中...")).toBeNull();
+      expect(screen.queryByText('初期設定中...')).toBeNull();
 
       await expoDb.closeAsync();
     });

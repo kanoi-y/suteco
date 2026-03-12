@@ -1,9 +1,9 @@
-import type { Db } from "@/lib/db/client";
-import { candidateLogs } from "@/lib/db/schema";
-import type { CandidateLog } from "@/types/candidate-log";
-import { desc, eq } from "drizzle-orm";
+import type { Db } from '@/lib/db/client';
+import { candidateLogs } from '@/lib/db/schema';
+import type { CandidateLog } from '@/types/candidate-log';
+import { desc, eq } from 'drizzle-orm';
 
-type CandidateLogCreate = Omit<CandidateLog, "id">;
+type CandidateLogCreate = Omit<CandidateLog, 'id'>;
 
 /**
  * 認識履歴ログの永続化を行う Repository
@@ -23,7 +23,7 @@ export class CandidateLogRepository {
       .returning({ id: candidateLogs.id });
     const id = result[0]?.id;
     if (id == null) {
-      throw new Error("Failed to insert candidate log");
+      throw new Error('Failed to insert candidate log');
     }
     return {
       id,
@@ -45,17 +45,14 @@ export class CandidateLogRepository {
     return {
       id: row.id,
       imageUri: row.imageUri,
-      candidates: JSON.parse(row.candidatesJson) as CandidateLog["candidates"],
+      candidates: JSON.parse(row.candidatesJson) as CandidateLog['candidates'],
       selectedItemId: row.selectedItemId ?? undefined,
       createdAt: row.createdAt,
     };
   }
 
   async findAll(limit?: number, offset?: number): Promise<CandidateLog[]> {
-    const base = this.db
-      .select()
-      .from(candidateLogs)
-      .orderBy(desc(candidateLogs.id));
+    const base = this.db.select().from(candidateLogs).orderBy(desc(candidateLogs.id));
     const rows =
       limit != null && offset != null
         ? await base.limit(limit).offset(offset)
@@ -67,7 +64,7 @@ export class CandidateLogRepository {
     return rows.map((row) => ({
       id: row.id,
       imageUri: row.imageUri,
-      candidates: JSON.parse(row.candidatesJson) as CandidateLog["candidates"],
+      candidates: JSON.parse(row.candidatesJson) as CandidateLog['candidates'],
       selectedItemId: row.selectedItemId ?? undefined,
       createdAt: row.createdAt,
     }));

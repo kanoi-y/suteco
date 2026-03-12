@@ -1,18 +1,23 @@
-import { type Href, useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useMunicipalityStore } from "@/stores/municipality-store";
-import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenContainer } from "@/components/ScreenContainer";
+import { PrimaryButton } from '@/components/PrimaryButton';
+import { ScreenContainer } from '@/components/ScreenContainer';
+import { useMunicipalityStore } from '@/stores/municipality-store';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const selectedMunicipalityName = useMunicipalityStore(
-    (s) => s.selectedMunicipalityName
-  );
+  const selectedMunicipality = useMunicipalityStore();
+
+  useEffect(() => {
+    if (selectedMunicipality.selectedMunicipalityId === null) {
+      router.replace('/municipalities');
+    }
+  }, [selectedMunicipality.selectedMunicipalityId, router]);
 
   const handleCameraPress = () => {
-    router.push("/camera" as Href);
+    router.push('/camera');
   };
 
   const handleImagePickerPress = async () => {
@@ -20,11 +25,11 @@ export default function HomeScreen() {
   };
 
   const handleSearchPress = () => {
-    router.push("/search");
+    router.push('/search');
   };
 
   const handleSettingsPress = () => {
-    router.push("/settings" as Href);
+    router.push('/settings');
   };
 
   return (
@@ -32,7 +37,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.appName}>Suteco</Text>
         <Text style={styles.municipality}>
-          {selectedMunicipalityName ?? "未選択"}
+          {selectedMunicipality.selectedMunicipalityName ?? '未選択'}
         </Text>
       </View>
 
@@ -54,12 +59,12 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 24,
-    fontWeight: "700",
-    color: "#333",
+    fontWeight: '700',
+    color: '#333',
   },
   municipality: {
     fontSize: 14,
-    color: "#666",
+    color: '#666',
     marginTop: 4,
   },
   actions: {
@@ -68,12 +73,12 @@ const styles = StyleSheet.create({
   settingsButton: {
     padding: 16,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
   },
   settingsText: {
     fontSize: 16,
-    color: "#333",
+    color: '#333',
   },
 });

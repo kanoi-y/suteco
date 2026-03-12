@@ -1,5 +1,8 @@
 import '@testing-library/jest-native/extend-expect';
 
+// AsyncStorage mock (Zustand persist で使用) - __mocks__/@react-native-async-storage/async-storage.js を参照
+jest.mock('@react-native-async-storage/async-storage');
+
 // react-native-reanimated mock
 // @ts-ignore
 require('react-native-reanimated').default;
@@ -33,10 +36,10 @@ jest.mock('expo-router', () => {
     }) => {
       const handlePress = () => mockRouter.push(href);
       if (asChild && React.Children.only(children)) {
-        return React.cloneElement(
-          children as React.ReactElement,
-          { ...rest, onPress: handlePress }
-        );
+        return React.cloneElement(children as React.ReactElement, {
+          ...rest,
+          onPress: handlePress,
+        });
       }
       return React.createElement(Pressable, { ...rest, onPress: handlePress }, children);
     },
