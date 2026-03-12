@@ -31,6 +31,7 @@ const initialState: MunicipalityState = {
   selectedMunicipalityId: null,
   selectedMunicipalityName: null,
   datasetVersion: null,
+  _hasHydrated: false,
 };
 
 function createValidDataset(): MunicipalityDataset {
@@ -163,6 +164,7 @@ describe('自治体選択導線', () => {
   describe('初回未選択ガードテスト', () => {
     it('初回起動時に未選択の場合、トップ画面から自治体選択画面へ遷移する', () => {
       resetStore();
+      useMunicipalityStore.setState({ _hasHydrated: true });
       const state = useMunicipalityStore.getState();
       expect(state.selectedMunicipalityId).toBeNull();
       expect(state.selectedMunicipalityName).toBeNull();

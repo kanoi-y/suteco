@@ -8,6 +8,7 @@ export type MunicipalityState = {
   selectedMunicipalityId: string | null;
   selectedMunicipalityName: string | null;
   datasetVersion: string | null;
+  _hasHydrated: boolean;
 };
 
 export type MunicipalityActions = {
@@ -18,12 +19,14 @@ export type MunicipalityActions = {
   }) => void;
   loadMunicipality: (municipalityId: string) => Promise<void>;
   clearMunicipality: () => void;
+  setHasHydrated: (state: boolean) => void;
 };
 
 const initialState: MunicipalityState = {
   selectedMunicipalityId: null,
   selectedMunicipalityName: null,
   datasetVersion: null,
+  _hasHydrated: false,
 };
 
 export const useMunicipalityStore = create<MunicipalityState & MunicipalityActions>()(
@@ -48,16 +51,20 @@ export const useMunicipalityStore = create<MunicipalityState & MunicipalityActio
             datasetVersion: municipality.version,
           });
         } else {
-          set(initialState);
+          set((s) => ({ ...initialState, _hasHydrated: s._hasHydrated }));
         }
       },
       clearMunicipality: () => {
-        set(initialState);
+        set((s) => ({ ...initialState, _hasHydrated: s._hasHydrated }));
       },
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
     }),
     {
       name: 'municipality-storage',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => () => {
+        useMunicipalityStore.getState().setHasHydrated(true);
+      },
       partialize: (state) => ({
         selectedMunicipalityId: state.selectedMunicipalityId,
         selectedMunicipalityName: state.selectedMunicipalityName,

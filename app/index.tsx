@@ -9,12 +9,18 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 export default function HomeScreen() {
   const router = useRouter();
   const selectedMunicipality = useMunicipalityStore();
+  const _hasHydrated = selectedMunicipality._hasHydrated;
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (selectedMunicipality.selectedMunicipalityId === null) {
       router.replace('/municipalities');
     }
-  }, [selectedMunicipality.selectedMunicipalityId, router]);
+  }, [_hasHydrated, selectedMunicipality.selectedMunicipalityId, router]);
+
+  if (!_hasHydrated) {
+    return null;
+  }
 
   const handleCameraPress = () => {
     router.push('/camera');

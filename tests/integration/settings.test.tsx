@@ -13,6 +13,7 @@ const initialState: MunicipalityState = {
   selectedMunicipalityId: null,
   selectedMunicipalityName: null,
   datasetVersion: null,
+  _hasHydrated: false,
 };
 
 function resetStore(): void {
