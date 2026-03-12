@@ -1,5 +1,8 @@
 import '@testing-library/jest-native/extend-expect';
 
+// AsyncStorage mock (Zustand persist で使用) - __mocks__/@react-native-async-storage/async-storage.js を参照
+jest.mock('@react-native-async-storage/async-storage');
+
 // react-native-reanimated mock
 // @ts-ignore
 require('react-native-reanimated').default;
@@ -33,10 +36,10 @@ jest.mock('expo-router', () => {
     }) => {
       const handlePress = () => mockRouter.push(href);
       if (asChild && React.Children.only(children)) {
-        return React.cloneElement(
-          children as React.ReactElement,
-          { ...rest, onPress: handlePress }
-        );
+        return React.cloneElement(children as React.ReactElement, {
+          ...rest,
+          onPress: handlePress,
+        });
       }
       return React.createElement(Pressable, { ...rest, onPress: handlePress }, children);
     },
@@ -44,4 +47,22 @@ jest.mock('expo-router', () => {
       Screen: jest.fn(() => null),
     },
   };
+});
+
+// __requireContext の ReferenceError 回避のため、datasets をモック化
+jest.mock('@/lib/datasets', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const datasetsDir = path.resolve(__dirname, '../datasets');
+
+  let files: string[] = [];
+  if (fs.existsSync(datasetsDir)) {
+    files = fs.readdirSync(datasetsDir).filter((f: string) => f.endsWith('.json'));
+  }
+
+  const defaultDatasets = files.map((file: string) => {
+    return JSON.parse(fs.readFileSync(path.join(datasetsDir, file), 'utf8'));
+  });
+
+  return { defaultDatasets };
 });

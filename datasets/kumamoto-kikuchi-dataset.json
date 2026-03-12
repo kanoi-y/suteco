@@ -8,103 +8,49 @@
     {
       "id": "mobile_battery",
       "displayName": "モバイルバッテリー",
-      "aliases": [
-        "充電池",
-        "リチウムイオン電池",
-        "充電式バッテリー"
-      ],
-      "keywords": [
-        "モバイルバッテリー",
-        "リチウムイオン電池",
-        "充電池",
-        "バッテリー"
-      ]
+      "aliases": ["充電池", "リチウムイオン電池", "充電式バッテリー"],
+      "keywords": ["モバイルバッテリー", "リチウムイオン電池", "充電池", "バッテリー"]
     },
     {
       "id": "dry_battery",
       "displayName": "乾電池",
-      "aliases": [
-        "電池",
-        "ボタン電池",
-        "コイン電池"
-      ],
-      "keywords": [
-        "乾電池",
-        "電池",
-        "ボタン電池",
-        "コイン電池"
-      ]
+      "aliases": ["電池", "ボタン電池", "コイン電池"],
+      "keywords": ["乾電池", "電池", "ボタン電池", "コイン電池"]
     },
     {
       "id": "spray_can",
       "displayName": "スプレー缶",
-      "aliases": [
-        "ガス缶",
-        "カセットボンベ"
-      ],
-      "keywords": [
-        "スプレー缶",
-        "ガス缶",
-        "カセットボンベ"
-      ]
+      "aliases": ["ガス缶", "カセットボンベ"],
+      "keywords": ["スプレー缶", "ガス缶", "カセットボンベ"]
     },
     {
       "id": "lighter",
       "displayName": "ライター",
-      "aliases": [
-        "チャッカマン"
-      ],
-      "keywords": [
-        "ライター",
-        "チャッカマン"
-      ]
+      "aliases": ["チャッカマン"],
+      "keywords": ["ライター", "チャッカマン"]
     },
     {
       "id": "rechargeable_small_appliance",
       "displayName": "電池類が取り外せない充電式小型家電",
-      "aliases": [
-        "充電式小型家電",
-        "電池内蔵小型家電"
-      ],
-      "keywords": [
-        "電池類が取り外せない充電式小型家電",
-        "充電式小型家電",
-        "電池内蔵小型家電"
-      ]
+      "aliases": ["充電式小型家電", "電池内蔵小型家電"],
+      "keywords": ["電池類が取り外せない充電式小型家電", "充電式小型家電", "電池内蔵小型家電"]
     },
     {
       "id": "pet_bottle",
       "displayName": "ペットボトル",
-      "aliases": [
-        "PETボトル"
-      ],
-      "keywords": [
-        "ペットボトル",
-        "PETボトル"
-      ]
+      "aliases": ["PETボトル"],
+      "keywords": ["ペットボトル", "PETボトル"]
     },
     {
       "id": "milk_carton",
       "displayName": "牛乳パック",
-      "aliases": [
-        "紙パック",
-        "ジュースパック",
-        "酒パック"
-      ],
-      "keywords": [
-        "牛乳パック",
-        "紙パック",
-        "ジュースパック",
-        "酒パック"
-      ]
+      "aliases": ["紙パック", "ジュースパック", "酒パック"],
+      "keywords": ["牛乳パック", "紙パック", "ジュースパック", "酒パック"]
     },
     {
       "id": "plastic_packaging",
       "displayName": "プラマーク製品",
-      "aliases": [
-        "プラスチック製容器包装",
-        "プラ容器"
-      ],
+      "aliases": ["プラスチック製容器包装", "プラ容器"],
       "keywords": [
         "プラマーク製品",
         "プラスチック製容器包装",
@@ -116,165 +62,73 @@
     {
       "id": "styrofoam",
       "displayName": "発泡スチロール",
-      "aliases": [
-        "緩衝材",
-        "果物用ネット"
-      ],
-      "keywords": [
-        "発泡スチロール",
-        "緩衝材",
-        "果物用ネット"
-      ]
+      "aliases": ["緩衝材", "果物用ネット"],
+      "keywords": ["発泡スチロール", "緩衝材", "果物用ネット"]
     },
     {
       "id": "newspaper_flyer",
       "displayName": "新聞紙・折込みチラシ",
-      "aliases": [
-        "新聞",
-        "チラシ"
-      ],
-      "keywords": [
-        "新聞紙",
-        "折込みチラシ",
-        "新聞",
-        "チラシ"
-      ]
+      "aliases": ["新聞", "チラシ"],
+      "keywords": ["新聞紙", "折込みチラシ", "新聞", "チラシ"]
     },
     {
       "id": "magazines_paper",
       "displayName": "雑誌・本・その他の紙",
-      "aliases": [
-        "雑誌",
-        "本",
-        "その他の紙",
-        "コピー用紙",
-        "電話帳"
-      ],
-      "keywords": [
-        "雑誌",
-        "本",
-        "その他の紙",
-        "コピー用紙",
-        "電話帳",
-        "菓子箱"
-      ]
+      "aliases": ["雑誌", "本", "その他の紙", "コピー用紙", "電話帳"],
+      "keywords": ["雑誌", "本", "その他の紙", "コピー用紙", "電話帳", "菓子箱"]
     },
     {
       "id": "clothes",
       "displayName": "布類",
-      "aliases": [
-        "衣類",
-        "古着",
-        "タオル",
-        "毛布",
-        "カーテン"
-      ],
-      "keywords": [
-        "布類",
-        "衣類",
-        "古着",
-        "タオル",
-        "毛布",
-        "カーテン",
-        "セーター"
-      ]
+      "aliases": ["衣類", "古着", "タオル", "毛布", "カーテン"],
+      "keywords": ["布類", "衣類", "古着", "タオル", "毛布", "カーテン", "セーター"]
     },
     {
       "id": "cardboard",
       "displayName": "段ボール",
-      "aliases": [
-        "ダンボール"
-      ],
-      "keywords": [
-        "段ボール",
-        "ダンボール"
-      ]
+      "aliases": ["ダンボール"],
+      "keywords": ["段ボール", "ダンボール"]
     },
     {
       "id": "empty_can",
       "displayName": "空きかん",
-      "aliases": [
-        "アルミ缶",
-        "スチール缶"
-      ],
-      "keywords": [
-        "空きかん",
-        "アルミ缶",
-        "スチール缶"
-      ]
+      "aliases": ["アルミ缶", "スチール缶"],
+      "keywords": ["空きかん", "アルミ缶", "スチール缶"]
     },
     {
       "id": "empty_bottle",
       "displayName": "空きびん",
-      "aliases": [
-        "びん",
-        "ジュースびん",
-        "一升びん",
-        "酒びん"
-      ],
-      "keywords": [
-        "空きびん",
-        "びん",
-        "ジュースびん",
-        "一升びん",
-        "酒びん"
-      ]
+      "aliases": ["びん", "ジュースびん", "一升びん", "酒びん"],
+      "keywords": ["空きびん", "びん", "ジュースびん", "一升びん", "酒びん"]
     },
     {
       "id": "burnable_waste",
       "displayName": "燃やすごみ",
-      "aliases": [
-        "可燃ごみ"
-      ],
-      "keywords": [
-        "燃やすごみ",
-        "可燃ごみ",
-        "生ごみ",
-        "紙くず",
-        "木くず",
-        "革類",
-        "ゴムくず"
-      ]
+      "aliases": ["可燃ごみ"],
+      "keywords": ["燃やすごみ", "可燃ごみ", "生ごみ", "紙くず", "木くず", "革類", "ゴムくず"]
     },
     {
       "id": "nonburnable_waste",
       "displayName": "不燃物",
-      "aliases": [
-        "不燃ごみ"
-      ],
-      "keywords": [
-        "不燃物",
-        "不燃ごみ",
-        "金属類",
-        "ガラス類",
-        "陶磁器類"
-      ]
+      "aliases": ["不燃ごみ"],
+      "keywords": ["不燃物", "不燃ごみ", "金属類", "ガラス類", "陶磁器類"]
     },
     {
       "id": "umbrella",
       "displayName": "傘",
       "aliases": [],
-      "keywords": [
-        "傘"
-      ]
+      "keywords": ["傘"]
     },
     {
       "id": "scissors",
       "displayName": "はさみ",
-      "aliases": [
-        "ハサミ"
-      ],
-      "keywords": [
-        "はさみ",
-        "ハサミ"
-      ]
+      "aliases": ["ハサミ"],
+      "keywords": ["はさみ", "ハサミ"]
     },
     {
       "id": "small_appliance",
       "displayName": "小型家電",
-      "aliases": [
-        "小型廃家電"
-      ],
+      "aliases": ["小型廃家電"],
       "keywords": [
         "小型家電",
         "小型廃家電",
@@ -288,115 +142,62 @@
     {
       "id": "fluorescent_tube",
       "displayName": "蛍光管",
-      "aliases": [
-        "蛍光灯"
-      ],
-      "keywords": [
-        "蛍光管",
-        "蛍光灯",
-        "廃蛍光管"
-      ]
+      "aliases": ["蛍光灯"],
+      "keywords": ["蛍光管", "蛍光灯", "廃蛍光管"]
     },
     {
       "id": "waste_cooking_oil",
       "displayName": "廃食用油",
-      "aliases": [
-        "使用済み食用油"
-      ],
-      "keywords": [
-        "廃食用油",
-        "使用済み食用油",
-        "食用油"
-      ]
+      "aliases": ["使用済み食用油"],
+      "keywords": ["廃食用油", "使用済み食用油", "食用油"]
     },
     {
       "id": "paint_can",
       "displayName": "塗料缶",
-      "aliases": [
-        "塗料スプレー缶",
-        "オイル缶"
-      ],
-      "keywords": [
-        "塗料缶",
-        "塗料スプレー缶",
-        "オイル缶"
-      ]
+      "aliases": ["塗料スプレー缶", "オイル缶"],
+      "keywords": ["塗料缶", "塗料スプレー缶", "オイル缶"]
     },
     {
       "id": "mercury_thermometer",
       "displayName": "水銀体温計・水銀血圧計",
-      "aliases": [
-        "水銀体温計",
-        "水銀血圧計",
-        "練り朱肉"
-      ],
-      "keywords": [
-        "水銀体温計",
-        "水銀血圧計",
-        "練り朱肉"
-      ]
+      "aliases": ["水銀体温計", "水銀血圧計", "練り朱肉"],
+      "keywords": ["水銀体温計", "水銀血圧計", "練り朱肉"]
     },
     {
       "id": "paper_cup_noodles",
       "displayName": "紙製カップめん容器・ふた",
-      "aliases": [
-        "紙製カップ容器"
-      ],
-      "keywords": [
-        "カップめん容器",
-        "紙製カップめん容器",
-        "紙製容器"
-      ]
+      "aliases": ["紙製カップ容器"],
+      "keywords": ["カップめん容器", "紙製カップめん容器", "紙製容器"]
     },
     {
       "id": "plastic_cup_noodles",
       "displayName": "プラスチック製カップめん容器・ふた・包装フィルム",
-      "aliases": [
-        "プラ製カップ容器"
-      ],
-      "keywords": [
-        "プラスチック製カップめん容器",
-        "プラ製カップ容器",
-        "包装フィルム"
-      ]
+      "aliases": ["プラ製カップ容器"],
+      "keywords": ["プラスチック製カップめん容器", "プラ製カップ容器", "包装フィルム"]
     },
     {
       "id": "catalog",
       "displayName": "カタログ",
       "aliases": [],
-      "keywords": [
-        "カタログ"
-      ]
+      "keywords": ["カタログ"]
     },
     {
       "id": "cutter_knife",
       "displayName": "カッターナイフ",
-      "aliases": [
-        "カッター"
-      ],
-      "keywords": [
-        "カッターナイフ",
-        "カッター"
-      ]
+      "aliases": ["カッター"],
+      "keywords": ["カッターナイフ", "カッター"]
     },
     {
       "id": "cell_phone",
       "displayName": "携帯電話",
-      "aliases": [
-        "ケータイ"
-      ],
-      "keywords": [
-        "携帯電話",
-        "ケータイ"
-      ]
+      "aliases": ["ケータイ"],
+      "keywords": ["携帯電話", "ケータイ"]
     },
     {
       "id": "diatomaceous_earth_mat",
       "displayName": "珪藻土マット",
       "aliases": [],
-      "keywords": [
-        "珪藻土マット"
-      ]
+      "keywords": ["珪藻土マット"]
     }
   ],
   "rules": [

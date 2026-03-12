@@ -1,7 +1,7 @@
-import type { Db } from "@/lib/db/client";
-import { items } from "@/lib/db/schema";
-import type { Item } from "@/schema/municipality-dataset-schema";
-import { eq } from "drizzle-orm";
+import type { Db } from '@/lib/db/client';
+import { items } from '@/lib/db/schema';
+import type { Item } from '@/schema/municipality-dataset-schema';
+import { eq } from 'drizzle-orm';
 
 /**
  * 品目データの永続化を行う Repository
@@ -29,11 +29,7 @@ export class ItemRepository {
   }
 
   async findById(id: string): Promise<Item | null> {
-    const rows = await this.db
-      .select()
-      .from(items)
-      .where(eq(items.id, id))
-      .limit(1);
+    const rows = await this.db.select().from(items).where(eq(items.id, id)).limit(1);
     const row = rows[0];
     if (!row) return null;
     return {
@@ -45,10 +41,7 @@ export class ItemRepository {
   }
 
   async findByDisplayName(displayName: string): Promise<Item[]> {
-    const rows = await this.db
-      .select()
-      .from(items)
-      .where(eq(items.displayName, displayName));
+    const rows = await this.db.select().from(items).where(eq(items.displayName, displayName));
     return rows.map((row) => ({
       id: row.id,
       displayName: row.displayName,

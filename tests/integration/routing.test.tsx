@@ -14,6 +14,19 @@ import MunicipalitiesScreen from "../../app/municipalities";
 import SearchScreen from "../../app/search";
 import SettingsScreen from "../../app/settings";
 
+jest.mock("@/lib/db/client", () => ({
+  ...jest.requireActual<typeof import("@/lib/db/client")>("@/lib/db/client"),
+  getDb: jest.fn(() => ({})),
+}));
+
+jest.mock("@/lib/repositories/municipality-repository", () => ({
+  MunicipalityRepository: class {
+    async findAll() {
+      return [];
+    }
+  },
+}));
+
 describe("主要ルートのレンダリング", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -46,7 +59,7 @@ describe("主要ルートのレンダリング", () => {
 
   it("自治体選択画面がレンダリングされる", () => {
     render(<MunicipalitiesScreen />);
-    expect(screen.getByText("自治体選択画面")).toBeTruthy();
+    expect(screen.getByText("自治体を選択")).toBeTruthy();
   });
 
   it("設定画面がレンダリングされる", () => {

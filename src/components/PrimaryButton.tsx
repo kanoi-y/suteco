@@ -1,9 +1,4 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 export type PrimaryButtonProps = {
   title: string;
@@ -33,11 +28,7 @@ export function PrimaryButton({
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator
-          testID="primary-button-loading"
-          color="#fff"
-          size="small"
-        />
+        <ActivityIndicator testID="primary-button-loading" color="#fff" size="small" />
       ) : (
         <Text style={styles.title}>{title}</Text>
       )}
@@ -47,20 +38,20 @@ export function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     minHeight: 48,
   },
   buttonDisabled: {
     opacity: 0.5,
   },
   title: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

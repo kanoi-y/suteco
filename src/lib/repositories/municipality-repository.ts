@@ -1,7 +1,7 @@
-import type { Db } from "@/lib/db/client";
-import { municipalities } from "@/lib/db/schema";
-import type { Municipality } from "@/schema/municipality-dataset-schema";
-import { eq } from "drizzle-orm";
+import type { Db } from '@/lib/db/client';
+import { municipalities } from '@/lib/db/schema';
+import type { Municipality } from '@/schema/municipality-dataset-schema';
+import { eq } from 'drizzle-orm';
 
 /**
  * 自治体データの永続化を行う Repository

@@ -1,7 +1,7 @@
-import { useSettingsStore } from "@/stores/settings-store";
+import { useSettingsStore } from '@/stores/settings-store';
 
 const initialState = {
-  recognizerType: "mock" as const,
+  recognizerType: 'mock' as const,
   showDebugInfo: false,
 };
 
@@ -9,39 +9,39 @@ function resetStore(): void {
   useSettingsStore.setState(initialState);
 }
 
-describe("settingsStore", () => {
+describe('settingsStore', () => {
   beforeEach(() => {
     resetStore();
   });
 
-  describe("初期状態", () => {
-    it("recognizerType が mock、showDebugInfo が false であること", () => {
+  describe('初期状態', () => {
+    it('recognizerType が mock、showDebugInfo が false であること', () => {
       const state = useSettingsStore.getState();
-      expect(state.recognizerType).toBe("mock");
+      expect(state.recognizerType).toBe('mock');
       expect(state.showDebugInfo).toBe(false);
     });
   });
 
-  describe("setRecognizerType", () => {
-    it("渡した認識方式が状態に反映されること", () => {
+  describe('setRecognizerType', () => {
+    it('渡した認識方式が状態に反映されること', () => {
       const { setRecognizerType } = useSettingsStore.getState();
-      setRecognizerType("api");
+      setRecognizerType('api');
 
       const state = useSettingsStore.getState();
-      expect(state.recognizerType).toBe("api");
+      expect(state.recognizerType).toBe('api');
     });
 
-    it("local に変更できること", () => {
+    it('local に変更できること', () => {
       const { setRecognizerType } = useSettingsStore.getState();
-      setRecognizerType("local");
+      setRecognizerType('local');
 
       const state = useSettingsStore.getState();
-      expect(state.recognizerType).toBe("local");
+      expect(state.recognizerType).toBe('local');
     });
   });
 
-  describe("setShowDebugInfo", () => {
-    it("デバッグ表示フラグを true に切り替えられること", () => {
+  describe('setShowDebugInfo', () => {
+    it('デバッグ表示フラグを true に切り替えられること', () => {
       const { setShowDebugInfo } = useSettingsStore.getState();
       setShowDebugInfo(true);
 
@@ -49,7 +49,7 @@ describe("settingsStore", () => {
       expect(state.showDebugInfo).toBe(true);
     });
 
-    it("デバッグ表示フラグを false に切り替えられること", () => {
+    it('デバッグ表示フラグを false に切り替えられること', () => {
       const { setShowDebugInfo } = useSettingsStore.getState();
       setShowDebugInfo(true);
       setShowDebugInfo(false);

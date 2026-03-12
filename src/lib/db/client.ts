@@ -1,9 +1,9 @@
-import type { SQLiteDatabase } from "expo-sqlite";
-import { openDatabaseSync } from "expo-sqlite";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import * as schema from "./schema";
+import type { SQLiteDatabase } from 'expo-sqlite';
+import { openDatabaseSync } from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import * as schema from './schema';
 
-const DB_NAME = "suteco.db";
+const DB_NAME = 'suteco.db';
 
 export type Db = ReturnType<typeof drizzle<typeof schema>>;
 

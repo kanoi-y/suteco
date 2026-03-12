@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import { PrimaryButton } from "@/components/PrimaryButton";
+import { StyleSheet, Text, View } from 'react-native';
+import { PrimaryButton } from '@/components/PrimaryButton';
 
 export type EmptyStateProps = {
   title: string;
@@ -8,12 +8,7 @@ export type EmptyStateProps = {
   onAction?: () => void;
 };
 
-export function EmptyState({
-  title,
-  message,
-  actionLabel,
-  onAction,
-}: EmptyStateProps) {
+export function EmptyState({ title, message, actionLabel, onAction }: EmptyStateProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
@@ -30,20 +25,20 @@ export function EmptyState({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 24,
   },
   title: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    textAlign: "center",
+    fontWeight: '600',
+    color: '#333',
+    textAlign: 'center',
   },
   message: {
     fontSize: 14,
-    color: "#666",
-    textAlign: "center",
+    color: '#666',
+    textAlign: 'center',
     marginTop: 8,
   },
   buttonContainer: {

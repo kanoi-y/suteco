@@ -1,11 +1,7 @@
-import { create } from "zustand";
-import type { Candidate } from "@/types/candidate";
+import { create } from 'zustand';
+import type { Candidate } from '@/types/candidate';
 
-export type ClassificationStatus =
-  | "idle"
-  | "recognizing"
-  | "success"
-  | "error";
+export type ClassificationStatus = 'idle' | 'recognizing' | 'success' | 'error';
 
 export type ClassificationState = {
   sourceImageUri: string | null;
@@ -28,18 +24,18 @@ const initialState: ClassificationState = {
   sourceImageUri: null,
   candidates: [],
   selectedItemId: null,
-  status: "idle",
+  status: 'idle',
   errorMessage: null,
 };
 
-export const useClassificationStore = create<
-  ClassificationState & ClassificationActions
->((set) => ({
-  ...initialState,
-  setSourceImageUri: (uri) => set({ sourceImageUri: uri }),
-  setCandidates: (candidates) => set({ candidates }),
-  setSelectedItemId: (id) => set({ selectedItemId: id }),
-  setStatus: (status) => set({ status }),
-  setErrorMessage: (msg) => set({ errorMessage: msg }),
-  reset: () => set(initialState),
-}));
+export const useClassificationStore = create<ClassificationState & ClassificationActions>(
+  (set) => ({
+    ...initialState,
+    setSourceImageUri: (uri) => set({ sourceImageUri: uri }),
+    setCandidates: (candidates) => set({ candidates }),
+    setSelectedItemId: (id) => set({ selectedItemId: id }),
+    setStatus: (status) => set({ status }),
+    setErrorMessage: (msg) => set({ errorMessage: msg }),
+    reset: () => set(initialState),
+  })
+);
