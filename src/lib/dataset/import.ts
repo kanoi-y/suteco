@@ -2,6 +2,7 @@ import type { Db } from '@/lib/db/client';
 import { disposalRules, items, municipalities } from '@/lib/db/schema';
 import { municipalityDatasetSchema } from '@/schema/municipality-dataset-schema';
 import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
+import { and, eq, notInArray, sql } from 'drizzle-orm';
 
 /**
  * 自治体データセットを DB に取り込む。
@@ -70,5 +71,27 @@ export async function importDataset(db: Db, dataset: MunicipalityDataset): Promi
           },
         });
     }
+
+    const newItemIds = parsed.rules.map((r) => r.itemId);
+    if (newItemIds.length > 0) {
+      await tx
+        .delete(disposalRules)
+        .where(
+          and(
+            eq(disposalRules.municipalityId, parsed.municipality.id),
+            notInArray(disposalRules.itemId, newItemIds)
+          )
+        );
+    } else {
+      await tx
+        .delete(disposalRules)
+        .where(eq(disposalRules.municipalityId, parsed.municipality.id));
+    }
+
+    await tx
+      .delete(items)
+      .where(
+        sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`
+      );
   });
 }

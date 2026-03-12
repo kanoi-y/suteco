@@ -161,4 +161,56 @@ describe('importDataset', () => {
       await expoDb.closeAsync();
     });
   });
+
+  describe('古いレコード削除テスト（バージョンアップ時）', () => {
+    it('新しいバージョンのデータセット取り込み時に、削除された分別ルールと孤立した品目がDBから除去される', async () => {
+      const { expoDb, db } = await openTestDb('dataset_import_stale_removal');
+
+      const datasetV1 = createValidDataset();
+      await importDataset(db, datasetV1);
+
+      expect(getRowCount(expoDb, 'disposal_rules')).toBe(2);
+      expect(getRowCount(expoDb, 'items')).toBe(2);
+
+      const datasetV2: MunicipalityDataset = {
+        municipality: {
+          id: 'test-city',
+          displayName: 'テスト市',
+          version: '2025-02-01',
+        },
+        items: [
+          {
+            id: 'item_a',
+            displayName: '品目A（更新）',
+            aliases: ['エイリアスA'],
+            keywords: ['キーワードA'],
+          },
+        ],
+        rules: [
+          {
+            municipalityId: 'test-city',
+            itemId: 'item_a',
+            categoryName: '資源物',
+            instructions: '洗って出してください。',
+          },
+        ],
+      };
+      await importDataset(db, datasetV2);
+
+      expect(getRowCount(expoDb, 'disposal_rules')).toBe(1);
+      expect(getRowCount(expoDb, 'items')).toBe(1);
+
+      const rules = expoDb.getAllSync<{ item_id: string }>(
+        'SELECT item_id FROM disposal_rules ORDER BY item_id'
+      );
+      expect(rules).toHaveLength(1);
+      expect(rules[0]?.item_id).toBe('item_a');
+
+      const items = expoDb.getAllSync<{ id: string }>('SELECT id FROM items ORDER BY id');
+      expect(items).toHaveLength(1);
+      expect(items[0]?.id).toBe('item_a');
+
+      await expoDb.closeAsync();
+    });
+  });
 });
