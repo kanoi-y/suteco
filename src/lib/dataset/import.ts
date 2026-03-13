@@ -90,9 +90,7 @@ export async function importDataset(db: Db, dataset: MunicipalityDataset): Promi
 
     await tx
       .delete(items)
-      .where(
-        sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`
-      );
+      .where(sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`);
   });
 }
 
@@ -112,18 +110,12 @@ export async function pruneUnbundledMunicipalities(db: Db, validIds: string[]): 
       return;
     }
 
-    await tx
-      .delete(disposalRules)
-      .where(notInArray(disposalRules.municipalityId, validIds));
+    await tx.delete(disposalRules).where(notInArray(disposalRules.municipalityId, validIds));
 
-    await tx
-      .delete(municipalities)
-      .where(notInArray(municipalities.id, validIds));
+    await tx.delete(municipalities).where(notInArray(municipalities.id, validIds));
 
     await tx
       .delete(items)
-      .where(
-        sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`
-      );
+      .where(sql`${items.id} NOT IN (SELECT ${disposalRules.itemId} FROM ${disposalRules})`);
   });
 }

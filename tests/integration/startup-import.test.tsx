@@ -10,8 +10,7 @@ import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 const mockImportDataset = jest.mocked(importDataset);
 
 jest.mock('@/lib/dataset/import', () => {
-  const actual =
-    jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
+  const actual = jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
   return {
     ...actual,
     importDataset: jest.fn().mockResolvedValue(undefined),
@@ -171,9 +170,9 @@ describe('初回起動時の import 導線', () => {
       }
       await realImportDataset(db, removedCityDataset);
 
-      const countBefore = expoDb.getAllSync<{ count: number }>(
-        'SELECT COUNT(*) as count FROM municipalities'
-      )[0]?.count ?? 0;
+      const countBefore =
+        expoDb.getAllSync<{ count: number }>('SELECT COUNT(*) as count FROM municipalities')[0]
+          ?.count ?? 0;
       expect(countBefore).toBe(defaultDatasets.length + 1);
 
       const hasRemovedBefore = expoDb
@@ -193,9 +192,9 @@ describe('初回起動時の import 導線', () => {
         expect(screen.getByText('メインコンテンツ')).toBeTruthy();
       });
 
-      const countAfter = expoDb.getAllSync<{ count: number }>(
-        'SELECT COUNT(*) as count FROM municipalities'
-      )[0]?.count ?? 0;
+      const countAfter =
+        expoDb.getAllSync<{ count: number }>('SELECT COUNT(*) as count FROM municipalities')[0]
+          ?.count ?? 0;
       expect(countAfter).toBe(defaultDatasets.length);
 
       const hasRemovedAfter = expoDb

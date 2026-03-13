@@ -7,7 +7,7 @@ declare global {
     context: (
       directory: string,
       useSubdirectories: boolean,
-      regExp: RegExp,
+      regExp: RegExp
     ) => {
       keys: () => string[];
       (key: string): unknown;
