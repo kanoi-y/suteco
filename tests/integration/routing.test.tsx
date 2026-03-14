@@ -4,7 +4,7 @@
  * 目的: 主要画面が存在し、遷移可能であることを定義する。
  * 画面ファイルが未実装の場合、静的インポート時にモジュール解決エラーで失敗する。
  */
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, renderAsync, screen, waitFor } from '@testing-library/react-native';
 import { mockRouter } from '../helpers/expo-router-mock';
 import CameraScreen from '../../app/camera';
 import CandidatesScreen from '../../app/candidates';
@@ -52,9 +52,11 @@ describe('主要ルートのレンダリング', () => {
     expect(screen.getByText('候補選択画面')).toBeTruthy();
   });
 
-  it('分別詳細画面がレンダリングされる', () => {
-    render(<ItemDetailScreen />);
-    expect(screen.getByText('分別詳細画面')).toBeTruthy();
+  it('分別詳細画面がレンダリングされる', async () => {
+    await renderAsync(<ItemDetailScreen />);
+    await waitFor(() => {
+      expect(screen.getByText('この自治体では分別ルールが登録されていません')).toBeTruthy();
+    });
   });
 
   it('自治体選択画面がレンダリングされる', () => {
