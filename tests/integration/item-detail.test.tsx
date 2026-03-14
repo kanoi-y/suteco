@@ -189,9 +189,7 @@ describe('分別詳細画面', () => {
       await renderAsync(<ItemDetailScreen />);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/この自治体では分別ルールが登録されていません/)
-        ).toBeTruthy();
+        expect(screen.getByText(/この自治体では分別ルールが登録されていません/)).toBeTruthy();
       });
 
       await expoDb.closeAsync();

@@ -2,19 +2,9 @@ import { EmptyState } from '@/components/EmptyState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { getDb } from '@/lib/db/client';
 import { ItemRepository } from '@/lib/repositories/item-repository';
-import {
-  DefaultItemSearchService,
-  type SearchResult,
-} from '@/lib/services/item-search-service';
+import { DefaultItemSearchService, type SearchResult } from '@/lib/services/item-search-service';
 import { useCallback, useMemo, useState } from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function SearchScreen() {
@@ -38,14 +28,14 @@ export default function SearchScreen() {
       const searchResults = await searchService.search({ query: text.trim() });
       setResults(searchResults);
     },
-    [searchService],
+    [searchService]
   );
 
   const handleResultPress = useCallback(
     (item: SearchResult) => {
       router.push(`/items/${item.itemId}`);
     },
-    [router],
+    [router]
   );
 
   const showEmptyState = query.trim() !== '' && results.length === 0;
@@ -65,20 +55,14 @@ export default function SearchScreen() {
       </View>
 
       {showEmptyState ? (
-        <EmptyState
-          title="見つかりませんでした"
-          message="検索条件に合う品目がありませんでした。"
-        />
+        <EmptyState title="見つかりませんでした" message="検索条件に合う品目がありませんでした。" />
       ) : (
         <FlatList
           data={results}
           keyExtractor={(item) => item.itemId}
           renderItem={({ item }) => (
             <Pressable
-              style={({ pressed }) => [
-                styles.resultItem,
-                pressed && styles.resultItemPressed,
-              ]}
+              style={({ pressed }) => [styles.resultItem, pressed && styles.resultItemPressed]}
               onPress={() => handleResultPress(item)}
             >
               <Text style={styles.resultText}>{item.displayName}</Text>
