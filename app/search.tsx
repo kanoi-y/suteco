@@ -4,7 +4,7 @@ import { getDb } from '@/lib/db/client';
 import { ItemRepository } from '@/lib/repositories/item-repository';
 import { DefaultItemSearchService, type SearchResult } from '@/lib/services/item-search-service';
 import { useMunicipalityStore } from '@/stores/municipality-store';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
@@ -13,6 +13,7 @@ export default function SearchScreen() {
   const selectedMunicipalityId = useMunicipalityStore((s) => s.selectedMunicipalityId);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const searchService = useMemo(() => {
     const db = getDb();
@@ -23,6 +24,14 @@ export default function SearchScreen() {
   const handleSearch = useCallback(
     async (text: string) => {
       setQuery(text);
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       if (text.trim() === '') {
         setResults([]);
         return;
@@ -31,11 +40,22 @@ export default function SearchScreen() {
         setResults([]);
         return;
       }
-      const searchResults = await searchService.search({
-        query: text.trim(),
-        municipalityId: selectedMunicipalityId,
-      });
-      setResults(searchResults);
+
+      try {
+        const searchResults = await searchService.search({
+          query: text.trim(),
+          municipalityId: selectedMunicipalityId,
+        });
+
+        if (!controller.signal.aborted) {
+          setResults(searchResults);
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        console.error('Search error:', error);
+      }
     },
     [searchService, selectedMunicipalityId]
   );
