@@ -39,7 +39,7 @@ describe('主要ルートのレンダリング', () => {
 
   it('検索画面がレンダリングされる', () => {
     render(<SearchScreen />);
-    expect(screen.getByText('検索画面')).toBeTruthy();
+    expect(screen.getByPlaceholderText('検索...')).toBeTruthy();
   });
 
   it('カメラ画面がレンダリングされる', () => {
