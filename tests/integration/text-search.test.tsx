@@ -6,6 +6,7 @@
  */
 import { getDb } from '@/lib/db/client';
 import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
+import { useMunicipalityStore } from '@/stores/municipality-store';
 import {
   fireEvent,
   fireEventAsync,
@@ -54,6 +55,7 @@ function createSearchDataset(): MunicipalityDataset {
 describe('テキスト検索導線', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    useMunicipalityStore.setState({ selectedMunicipalityId: 'test-city' });
   });
 
   describe('入力で検索されるテスト', () => {

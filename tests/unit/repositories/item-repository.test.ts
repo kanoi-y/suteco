@@ -1,6 +1,8 @@
 import type * as SQLite from 'expo-sqlite';
+import { importDataset } from '@/lib/dataset/import';
 import { ItemRepository } from '@/lib/repositories/item-repository';
 import type { Item } from '@/schema/municipality-dataset-schema';
+import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 import { openTestDb } from '../../helpers/db';
 
 function createItem(overrides?: Partial<Item>): Item {
@@ -16,11 +18,13 @@ function createItem(overrides?: Partial<Item>): Item {
 describe('ItemRepository', () => {
   let expoDb: SQLite.SQLiteDatabase;
   let repository: ItemRepository;
+  let db: Awaited<ReturnType<typeof openTestDb>>['db'];
 
   beforeEach(async () => {
-    const { expoDb: db, db: drizzleDb } = await openTestDb('item_repo');
-    expoDb = db;
-    repository = new ItemRepository(drizzleDb);
+    const opened = await openTestDb('item_repo');
+    expoDb = opened.expoDb;
+    db = opened.db;
+    repository = new ItemRepository(db);
   });
 
   afterEach(async () => {
@@ -93,6 +97,47 @@ describe('ItemRepository', () => {
     it('0件の場合は空配列を返す', async () => {
       const all = await repository.findAll();
       expect(all).toEqual([]);
+    });
+  });
+
+  describe('findByMunicipalityId', () => {
+    const createDataset = (municipalityId: string, itemIds: string[]): MunicipalityDataset => ({
+      municipality: {
+        id: municipalityId,
+        displayName: 'テスト市',
+        version: '2025-01-01',
+      },
+      items: itemIds.map((id) => createItem({ id, displayName: `品目_${id}` })),
+      rules: itemIds.map((id) => ({
+        municipalityId,
+        itemId: id,
+        categoryName: '資源物',
+        instructions: '出してください。',
+      })),
+    });
+
+    it('指定自治体にルールが登録されている品目のみ取得できる', async () => {
+      await importDataset(db, createDataset('city-a', ['item_1', 'item_2']));
+
+      const found = await repository.findByMunicipalityId('city-a');
+      expect(found).toHaveLength(2);
+      expect(found.map((i) => i.id)).toEqual(expect.arrayContaining(['item_1', 'item_2']));
+    });
+
+    it('他自治体の品目は含まれない', async () => {
+      await importDataset(db, createDataset('city-a', ['item_a']));
+      await importDataset(db, createDataset('city-b', ['item_b', 'item_c']));
+
+      const found = await repository.findByMunicipalityId('city-a');
+      expect(found).toHaveLength(1);
+      expect(found[0]?.id).toBe('item_a');
+    });
+
+    it('存在しない自治体IDでは空配列を返す', async () => {
+      await importDataset(db, createDataset('city-x', ['item_1']));
+
+      const found = await repository.findByMunicipalityId('no-such-city');
+      expect(found).toEqual([]);
     });
   });
 });

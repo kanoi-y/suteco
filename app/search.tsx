@@ -3,12 +3,14 @@ import { ScreenContainer } from '@/components/ScreenContainer';
 import { getDb } from '@/lib/db/client';
 import { ItemRepository } from '@/lib/repositories/item-repository';
 import { DefaultItemSearchService, type SearchResult } from '@/lib/services/item-search-service';
+import { useMunicipalityStore } from '@/stores/municipality-store';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function SearchScreen() {
   const router = useRouter();
+  const selectedMunicipalityId = useMunicipalityStore((s) => s.selectedMunicipalityId);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
 
@@ -25,10 +27,17 @@ export default function SearchScreen() {
         setResults([]);
         return;
       }
-      const searchResults = await searchService.search({ query: text.trim() });
+      if (!selectedMunicipalityId) {
+        setResults([]);
+        return;
+      }
+      const searchResults = await searchService.search({
+        query: text.trim(),
+        municipalityId: selectedMunicipalityId,
+      });
       setResults(searchResults);
     },
-    [searchService]
+    [searchService, selectedMunicipalityId]
   );
 
   const handleResultPress = useCallback(

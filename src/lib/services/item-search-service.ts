@@ -12,27 +12,27 @@ export type SearchResult = {
 };
 
 export interface ItemSearchService {
-  search(params: { query: string; limit?: number }): Promise<SearchResult[]>;
+  search(params: { query: string; municipalityId: string; limit?: number }): Promise<SearchResult[]>;
 }
 
 /** 品目検索サービスが依存する Repository の最小インターフェース */
 export interface ItemRepositoryLike {
-  findAll(): Promise<Item[]>;
+  findByMunicipalityId(municipalityId: string): Promise<Item[]>;
 }
 
 /**
  * 品目検索サービスのデフォルト実装
- * ItemRepositoryLike の findAll で取得した品目を検索する
+ * ItemRepositoryLike の findByMunicipalityId で取得した品目を検索する
  */
 export class DefaultItemSearchService implements ItemSearchService {
   constructor(private readonly itemRepository: ItemRepositoryLike) {}
 
-  async search(params: { query: string; limit?: number }): Promise<SearchResult[]> {
-    const { query, limit } = params;
+  async search(params: { query: string; municipalityId: string; limit?: number }): Promise<SearchResult[]> {
+    const { query, municipalityId, limit } = params;
 
     if (query === '') return [];
 
-    const items = await this.itemRepository.findAll();
+    const items = await this.itemRepository.findByMunicipalityId(municipalityId);
     const scoreMap: Record<SearchResult['matchedBy'], number> = {
       display_name_exact: 5,
       alias_exact: 4,

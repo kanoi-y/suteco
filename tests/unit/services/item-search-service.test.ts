@@ -5,7 +5,7 @@ import { DefaultItemSearchService } from '@/lib/services/item-search-service';
 class FakeItemRepository {
   constructor(private readonly items: Item[] = []) {}
 
-  async findAll(): Promise<Item[]> {
+  async findByMunicipalityId(_municipalityId: string): Promise<Item[]> {
     return [...this.items];
   }
 }
@@ -26,7 +26,7 @@ describe('DefaultItemSearchService', () => {
       const items = [createItem({ id: 'item_1', displayName: 'プラスチック' })];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: 'プラスチック' });
+      const results = await service.search({ query: 'プラスチック', municipalityId: 'test-city' });
 
       expect(results).toHaveLength(1);
       expect(results[0]).toEqual({
@@ -44,7 +44,7 @@ describe('DefaultItemSearchService', () => {
       ];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: 'プラ' });
+      const results = await service.search({ query: 'プラ', municipalityId: 'test-city' });
 
       expect(results).toHaveLength(1);
       expect(results[0]).toEqual({
@@ -60,7 +60,7 @@ describe('DefaultItemSearchService', () => {
       const items = [createItem({ id: 'item_3', displayName: 'プラスチック', aliases: [] })];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: 'スチック' });
+      const results = await service.search({ query: 'スチック', municipalityId: 'test-city' });
 
       expect(results).toHaveLength(1);
       expect(results[0]).toEqual({
@@ -80,7 +80,7 @@ describe('DefaultItemSearchService', () => {
       ];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: '牛乳' });
+      const results = await service.search({ query: '牛乳', municipalityId: 'test-city' });
 
       expect(results).toHaveLength(1);
       expect(results[0]).toEqual({
@@ -103,7 +103,7 @@ describe('DefaultItemSearchService', () => {
       ];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: 'ペットボトル' });
+      const results = await service.search({ query: 'ペットボトル', municipalityId: 'test-city' });
 
       expect(results).toHaveLength(1);
       expect(results[0]).toEqual({
@@ -150,7 +150,7 @@ describe('DefaultItemSearchService', () => {
       ];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: '電池' });
+      const results = await service.search({ query: '電池', municipalityId: 'test-city' });
 
       expect(results.map((r) => r.itemId)).toEqual([
         'display_exact',
@@ -167,7 +167,7 @@ describe('DefaultItemSearchService', () => {
       const items = [createItem()];
       const service = new DefaultItemSearchService(new FakeItemRepository(items));
 
-      const results = await service.search({ query: '' });
+      const results = await service.search({ query: '', municipalityId: 'test-city' });
 
       expect(results).toEqual([]);
     });
