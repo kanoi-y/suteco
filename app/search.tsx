@@ -1,10 +1,137 @@
-import { Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { EmptyState } from '@/components/EmptyState';
+import { ScreenContainer } from '@/components/ScreenContainer';
+import { getDb } from '@/lib/db/client';
+import { ItemRepository } from '@/lib/repositories/item-repository';
+import { DefaultItemSearchService, type SearchResult } from '@/lib/services/item-search-service';
+import { useMunicipalityStore } from '@/stores/municipality-store';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function SearchScreen() {
+  const router = useRouter();
+  const selectedMunicipalityId = useMunicipalityStore((s) => s.selectedMunicipalityId);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const searchService = useMemo(() => {
+    const db = getDb();
+    const itemRepository = new ItemRepository(db);
+    return new DefaultItemSearchService(itemRepository);
+  }, []);
+
+  const handleSearch = useCallback(
+    async (text: string) => {
+      setQuery(text);
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      if (text.trim() === '') {
+        setResults([]);
+        return;
+      }
+      if (!selectedMunicipalityId) {
+        setResults([]);
+        return;
+      }
+
+      try {
+        const searchResults = await searchService.search({
+          query: text.trim(),
+          municipalityId: selectedMunicipalityId,
+        });
+
+        if (!controller.signal.aborted) {
+          setResults(searchResults);
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        console.error('Search error:', error);
+      }
+    },
+    [searchService, selectedMunicipalityId]
+  );
+
+  const handleResultPress = useCallback(
+    (item: SearchResult) => {
+      router.push(`/items/${item.itemId}`);
+    },
+    [router]
+  );
+
+  const showEmptyState = query.trim() !== '' && results.length === 0;
+
   return (
-    <SafeAreaView style={{ flex: 1, padding: 24 }}>
-      <Text>検索画面</Text>
-    </SafeAreaView>
+    <ScreenContainer>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="検索..."
+          placeholderTextColor="#999"
+          value={query}
+          onChangeText={handleSearch}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+      </View>
+
+      {showEmptyState ? (
+        <EmptyState title="見つかりませんでした" message="検索条件に合う品目がありませんでした。" />
+      ) : (
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.itemId}
+          renderItem={({ item }) => (
+            <Pressable
+              style={({ pressed }) => [styles.resultItem, pressed && styles.resultItemPressed]}
+              onPress={() => handleResultPress(item)}
+            >
+              <Text style={styles.resultText}>{item.displayName}</Text>
+            </Pressable>
+          )}
+          style={styles.list}
+        />
+      )}
+    </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    marginBottom: 16,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  resultItem: {
+    backgroundColor: '#fff',
+    padding: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  resultItemPressed: {
+    backgroundColor: '#f5f5f5',
+  },
+  resultText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  list: {
+    flex: 1,
+  },
+});

@@ -259,7 +259,9 @@ describe('pruneUnbundledMunicipalities', () => {
     expect(getRowCount(expoDb, 'items')).toBe(2);
     expect(getRowCount(expoDb, 'disposal_rules')).toBe(2);
 
-    const remaining = expoDb.getAllSync<{ id: string }>('SELECT id FROM municipalities ORDER BY id');
+    const remaining = expoDb.getAllSync<{ id: string }>(
+      'SELECT id FROM municipalities ORDER BY id'
+    );
     expect(remaining.map((r) => r.id)).toEqual(['city-a', 'city-c']);
 
     await expoDb.closeAsync();

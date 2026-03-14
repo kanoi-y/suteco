@@ -1,11 +1,6 @@
 import { useMunicipalityStore } from '@/stores/municipality-store';
 import { useRouter } from 'expo-router';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
@@ -18,9 +13,7 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.label}>現在の自治体:</Text>
-        <Text style={styles.value}>
-          {selectedMunicipalityName ?? '未選択'}
-        </Text>
+        <Text style={styles.value}>{selectedMunicipalityName ?? '未選択'}</Text>
       </View>
 
       <View style={styles.section}>
@@ -28,10 +21,7 @@ export default function SettingsScreen() {
         <Text style={styles.value}>{datasetVersion ?? '不明'}</Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push('/municipalities')}
-      >
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/municipalities')}>
         <Text style={styles.buttonText}>自治体を変更する</Text>
       </TouchableOpacity>
     </SafeAreaView>

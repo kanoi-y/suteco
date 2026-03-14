@@ -33,7 +33,12 @@ export default function HomeScreen() {
     return () => {
       isMounted = false;
     };
-  }, [_hasHydrated, selectedMunicipality.selectedMunicipalityId, router, selectedMunicipality.loadMunicipality]);
+  }, [
+    _hasHydrated,
+    selectedMunicipality.selectedMunicipalityId,
+    router,
+    selectedMunicipality.loadMunicipality,
+  ]);
 
   if (!_hasHydrated || isValidating) {
     return null;
