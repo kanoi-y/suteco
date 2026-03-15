@@ -49,7 +49,7 @@ describe('主要ルートのレンダリング', () => {
 
   it('候補選択画面がレンダリングされる', () => {
     render(<CandidatesScreen />);
-    expect(screen.getByText('候補選択画面')).toBeTruthy();
+    expect(screen.getByText('認識結果の候補')).toBeTruthy();
   });
 
   it('分別詳細画面がレンダリングされる', async () => {
