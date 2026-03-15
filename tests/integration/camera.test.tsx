@@ -12,6 +12,7 @@ import {
 } from '@testing-library/react-native';
 import type { RecognitionResult } from '@/lib/services/recognizer/types';
 import { useClassificationStore } from '@/stores/classification-store';
+import { mockRouter } from '../helpers/expo-router-mock';
 import type { ClassificationState } from '@/stores/classification-store';
 import CameraScreen from '../../app/camera';
 
@@ -76,6 +77,7 @@ jest.mock('expo-image-picker', () => ({
 describe('カメラ画面', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockRouter.push.mockClear();
     resetClassificationStore();
   });
 
@@ -226,7 +228,7 @@ describe('カメラ画面', () => {
       });
     });
 
-    it('認識成功時に candidates と status: success がストアに保存される', async () => {
+    it('認識成功時に candidates と status: success がストアに保存され、候補選択画面へ遷移する', async () => {
       const imageUri = 'file:///library/selected.jpg';
       const expectedCandidates = [
         { itemId: 'item-1', label: 'ペットボトル', score: 0.95 },
@@ -252,6 +254,7 @@ describe('カメラ画面', () => {
         expect(state.candidates).toEqual(expectedCandidates);
         expect(state.status).toBe('success');
       });
+      expect(mockRouter.push).toHaveBeenCalledWith('/candidates');
     });
 
     it('認識失敗時に errorMessage と status: error がストアに保存される', async () => {

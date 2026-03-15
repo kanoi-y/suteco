@@ -1,10 +1,71 @@
-import { Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useClassificationStore } from '@/stores/classification-store';
+import { ScreenContainer } from '@/components/ScreenContainer';
+import { SectionCard } from '@/components/SectionCard';
+import { PrimaryButton } from '@/components/PrimaryButton';
 
 export default function CandidatesScreen() {
+  const router = useRouter();
+  const { sourceImageUri, candidates } = useClassificationStore();
+
   return (
-    <SafeAreaView style={{ flex: 1, padding: 24 }}>
-      <Text>候補選択画面</Text>
-    </SafeAreaView>
+    <ScreenContainer>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        {sourceImageUri ? (
+          <Image
+            testID="source-image"
+            source={{ uri: sourceImageUri }}
+            style={styles.thumbnail}
+          />
+        ) : null}
+        <SectionCard title="認識結果の候補">
+          {candidates.map((candidate) => (
+            <TouchableOpacity
+              key={candidate.itemId}
+              onPress={() => router.push(`/items/${candidate.itemId}`)}
+              style={styles.candidateItem}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.candidateLabel}>{candidate.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </SectionCard>
+        <PrimaryButton
+          title="テキストで検索"
+          onPress={() => router.push('/search')}
+        />
+      </ScrollView>
+    </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+  },
+  content: {
+    paddingBottom: 24,
+  },
+  thumbnail: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: '#e0e0e0',
+  },
+  candidateItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 0,
+  },
+  candidateLabel: {
+    fontSize: 16,
+    color: '#333',
+  },
+});

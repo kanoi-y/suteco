@@ -3,7 +3,7 @@ import { useClassificationStore } from '@/stores/classification-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
   Image,
@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 
 export default function CameraScreen() {
+  const router = useRouter();
   const { photoUri: initialPhotoUri } = useLocalSearchParams<{ photoUri?: string }>();
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(
@@ -63,6 +64,7 @@ export default function CameraScreen() {
       const result = await recognizer.recognize(photoUri);
       setCandidates(result.candidates);
       setStatus('success');
+      router.push('/candidates');
     } catch (err) {
       const message = err instanceof Error ? err.message : '認識に失敗しました';
       setErrorMessage(message);
