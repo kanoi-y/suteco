@@ -1,3 +1,6 @@
+import { createRecognizer } from '@/lib/services/recognizer';
+import { useClassificationStore } from '@/stores/classification-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams } from 'expo-router';
@@ -18,6 +21,12 @@ export default function CameraScreen() {
     typeof initialPhotoUri === 'string' ? initialPhotoUri : null,
   );
   const cameraRef = useRef<CameraView>(null);
+
+  const recognizerType = useSettingsStore((state) => state.recognizerType);
+  const setSourceImageUri = useClassificationStore((state) => state.setSourceImageUri);
+  const setStatus = useClassificationStore((state) => state.setStatus);
+  const setCandidates = useClassificationStore((state) => state.setCandidates);
+  const setErrorMessage = useClassificationStore((state) => state.setErrorMessage);
 
   const handleRequestPermission = () => {
     requestPermission();
@@ -43,8 +52,22 @@ export default function CameraScreen() {
     setPhotoUri(result.assets[0].uri);
   };
 
-  const handleJudge = () => {
-    // TODO: 判定処理への遷移
+  const handleJudge = async () => {
+    if (!photoUri) return;
+
+    setSourceImageUri(photoUri);
+    setStatus('recognizing');
+
+    try {
+      const recognizer = createRecognizer(recognizerType);
+      const result = await recognizer.recognize(photoUri);
+      setCandidates(result.candidates);
+      setStatus('success');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '認識に失敗しました';
+      setErrorMessage(message);
+      setStatus('error');
+    }
   };
 
   if (!permission?.granted) {
