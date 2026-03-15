@@ -10,7 +10,7 @@ import { mockRouter } from '../helpers/expo-router-mock';
 import HomeScreen from '../../app/index';
 
 jest.mock('expo-image-picker', () => ({
-  launchImageLibraryAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn().mockResolvedValue({ canceled: true }),
 }));
 
 describe('トップ画面主要導線', () => {

@@ -44,12 +44,12 @@ describe('主要ルートのレンダリング', () => {
 
   it('カメラ画面がレンダリングされる', () => {
     render(<CameraScreen />);
-    expect(screen.getByText('カメラ画面')).toBeTruthy();
+    expect(screen.getByText('カメラの許可が必要です')).toBeTruthy();
   });
 
   it('候補選択画面がレンダリングされる', () => {
     render(<CandidatesScreen />);
-    expect(screen.getByText('候補選択画面')).toBeTruthy();
+    expect(screen.getByText('認識結果の候補')).toBeTruthy();
   });
 
   it('分別詳細画面がレンダリングされる', async () => {
