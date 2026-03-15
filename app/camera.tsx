@@ -72,17 +72,6 @@ export default function CameraScreen() {
     }
   };
 
-  if (!permission?.granted) {
-    return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.permissionContent}>
-          <Text style={styles.permissionMessage}>カメラの許可が必要です</Text>
-          <PrimaryButton title="許可する" onPress={handleRequestPermission} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   if (photoUri) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
@@ -96,6 +85,17 @@ export default function CameraScreen() {
             <PrimaryButton title="再撮影" onPress={handleRetake} />
             <PrimaryButton title="判定する" onPress={handleJudge} />
           </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!permission?.granted) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.permissionContent}>
+          <Text style={styles.permissionMessage}>カメラの許可が必要です</Text>
+          <PrimaryButton title="許可する" onPress={handleRequestPermission} />
         </View>
       </SafeAreaView>
     );
