@@ -49,7 +49,12 @@ export default function HomeScreen() {
   };
 
   const handleImagePickerPress = async () => {
-    await ImagePicker.launchImageLibraryAsync();
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+    });
+    if (result.canceled || !result.assets?.[0]?.uri) return;
+    router.push({ pathname: '/camera', params: { photoUri: result.assets[0].uri } });
   };
 
   const handleSearchPress = () => {

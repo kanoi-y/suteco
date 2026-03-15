@@ -9,6 +9,8 @@ import CameraScreen from '../../app/camera';
 
 const mockTakePictureAsync = jest.fn();
 
+const mockLaunchImageLibraryAsync = jest.fn();
+
 const mockUseCameraPermissions = jest.fn();
 const mockRequestPermission = jest.fn();
 const mockGetPermission = jest.fn();
@@ -36,6 +38,11 @@ jest.mock('expo-camera', () => {
     ),
   };
 });
+
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: (...args: unknown[]) =>
+    mockLaunchImageLibraryAsync(...args),
+}));
 
 describe('カメラ画面', () => {
   beforeEach(() => {
@@ -86,6 +93,51 @@ describe('カメラ画面', () => {
       render(<CameraScreen />);
 
       expect(screen.getByText('撮影')).toBeTruthy();
+    });
+
+    it('ライブラリから選択ボタンが表示される', () => {
+      render(<CameraScreen />);
+
+      expect(screen.getByText('ライブラリから選択')).toBeTruthy();
+    });
+
+    it('ライブラリから選択ボタン押下時に launchImageLibraryAsync が呼ばれる', () => {
+      mockLaunchImageLibraryAsync.mockResolvedValue({ canceled: true });
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+
+      expect(mockLaunchImageLibraryAsync).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mediaTypes: expect.any(Array),
+          allowsEditing: expect.any(Boolean),
+        }),
+      );
+    });
+
+    it('ライブラリから画像選択後はプレビュー画像と再撮影・判定するボタンが表示される', async () => {
+      mockLaunchImageLibraryAsync.mockResolvedValue({
+        canceled: false,
+        assets: [
+          {
+            uri: 'file:///library/selected.jpg',
+            width: 1920,
+            height: 1080,
+          },
+        ],
+      });
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+
+      await screen.findByTestId('preview-image');
+
+      expect(screen.getByText('再撮影')).toBeTruthy();
+      expect(screen.getByText('判定する')).toBeTruthy();
     });
 
     it('撮影後はプレビュー画像と再撮影・判定するボタンが表示される', async () => {

@@ -1,4 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
   Image,
@@ -10,8 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 
 export default function CameraScreen() {
+  const { photoUri: initialPhotoUri } = useLocalSearchParams<{ photoUri?: string }>();
   const [permission, requestPermission] = useCameraPermissions();
-  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [photoUri, setPhotoUri] = useState<string | null>(
+    typeof initialPhotoUri === 'string' ? initialPhotoUri : null,
+  );
   const cameraRef = useRef<CameraView>(null);
 
   const handleRequestPermission = () => {
@@ -27,6 +32,15 @@ export default function CameraScreen() {
 
   const handleRetake = () => {
     setPhotoUri(null);
+  };
+
+  const handleSelectFromLibrary = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+    });
+    if (result.canceled || !result.assets?.[0]?.uri) return;
+    setPhotoUri(result.assets[0].uri);
   };
 
   const handleJudge = () => {
@@ -68,6 +82,7 @@ export default function CameraScreen() {
         <SafeAreaView style={styles.cameraOverlay} edges={['top']}>
           <View style={styles.captureArea}>
             <PrimaryButton title="撮影" onPress={handleCapture} />
+            <PrimaryButton title="ライブラリから選択" onPress={handleSelectFromLibrary} />
           </View>
         </SafeAreaView>
       </CameraView>
@@ -111,5 +126,6 @@ const styles = StyleSheet.create({
   captureArea: {
     padding: 16,
     alignItems: 'center',
+    gap: 12,
   },
 });
