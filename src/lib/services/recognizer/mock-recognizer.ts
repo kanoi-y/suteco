@@ -6,7 +6,7 @@ import type { Recognizer, RecognitionResult } from './types';
  */
 export class MockRecognizer implements Recognizer {
   async recognize(_imageUri: string): Promise<RecognitionResult> {
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     return {
       candidates: [

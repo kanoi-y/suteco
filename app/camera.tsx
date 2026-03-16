@@ -5,12 +5,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 
@@ -19,7 +14,7 @@ export default function CameraScreen() {
   const { photoUri: initialPhotoUri } = useLocalSearchParams<{ photoUri?: string }>();
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(
-    typeof initialPhotoUri === 'string' ? initialPhotoUri : null,
+    typeof initialPhotoUri === 'string' ? initialPhotoUri : null
   );
   const cameraRef = useRef<CameraView>(null);
 
@@ -76,11 +71,7 @@ export default function CameraScreen() {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.previewContent}>
-          <Image
-            source={{ uri: photoUri }}
-            style={styles.previewImage}
-            testID="preview-image"
-          />
+          <Image source={{ uri: photoUri }} style={styles.previewImage} testID="preview-image" />
           <View style={styles.previewActions}>
             <PrimaryButton title="再撮影" onPress={handleRetake} />
             <PrimaryButton title="判定する" onPress={handleJudge} />

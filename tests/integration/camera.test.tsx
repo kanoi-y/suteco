@@ -4,12 +4,7 @@
  * 目的: カメラ画面の責務を先に固定する。
  * カメラ画面未実装時には、これらのテストが失敗する。
  */
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import type { RecognitionResult } from '@/lib/services/recognizer/types';
 import { useClassificationStore } from '@/stores/classification-store';
 import { mockRouter } from '../helpers/expo-router-mock';
@@ -54,7 +49,7 @@ jest.mock('expo-camera', () => {
     CameraView: React.forwardRef(
       (
         { children, ...props }: { children?: React.ReactNode },
-        ref: React.Ref<{ takePictureAsync: jest.Mock }>,
+        ref: React.Ref<{ takePictureAsync: jest.Mock }>
       ) => {
         React.useImperativeHandle(ref, () => ({
           takePictureAsync: mockTakePictureAsync,
@@ -64,14 +59,13 @@ jest.mock('expo-camera', () => {
             {children}
           </View>
         );
-      },
+      }
     ),
   };
 });
 
 jest.mock('expo-image-picker', () => ({
-  launchImageLibraryAsync: (...args: unknown[]) =>
-    mockLaunchImageLibraryAsync(...args),
+  launchImageLibraryAsync: (...args: unknown[]) => mockLaunchImageLibraryAsync(...args),
 }));
 
 describe('カメラ画面', () => {
@@ -145,7 +139,7 @@ describe('カメラ画面', () => {
         expect.objectContaining({
           mediaTypes: expect.any(Array),
           allowsEditing: expect.any(Boolean),
-        }),
+        })
       );
     });
 
@@ -208,9 +202,7 @@ describe('カメラ画面', () => {
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockImplementation(
-        () => new Promise<RecognitionResult>(() => {}),
-      );
+      mockRecognize.mockImplementation(() => new Promise<RecognitionResult>(() => {}));
 
       render(<CameraScreen />);
 
