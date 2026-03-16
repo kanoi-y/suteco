@@ -1,10 +1,4 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useClassificationStore } from '@/stores/classification-store';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -19,11 +13,7 @@ export default function CandidatesScreen() {
     <ScreenContainer>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {sourceImageUri ? (
-          <Image
-            testID="source-image"
-            source={{ uri: sourceImageUri }}
-            style={styles.thumbnail}
-          />
+          <Image testID="source-image" source={{ uri: sourceImageUri }} style={styles.thumbnail} />
         ) : null}
         <SectionCard title="認識結果の候補">
           {candidates.map((candidate) => (
@@ -37,10 +27,7 @@ export default function CandidatesScreen() {
             </TouchableOpacity>
           ))}
         </SectionCard>
-        <PrimaryButton
-          title="テキストで検索"
-          onPress={() => router.push('/search')}
-        />
+        <PrimaryButton title="テキストで検索" onPress={() => router.push('/search')} />
       </ScrollView>
     </ScreenContainer>
   );

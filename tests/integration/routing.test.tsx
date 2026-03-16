@@ -27,6 +27,23 @@ jest.mock('@/lib/repositories/municipality-repository', () => ({
   },
 }));
 
+jest.mock('expo-camera', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    useCameraPermissions: () => [
+      { granted: false, canAskAgain: false },
+      jest.fn(),
+      jest.fn(),
+    ],
+    CameraView: React.forwardRef(
+      (props: Record<string, unknown>, ref: React.Ref<unknown>) => (
+        <View testID="camera-view" {...props} />
+      )
+    ),
+  };
+});
+
 describe('主要ルートのレンダリング', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -44,7 +61,7 @@ describe('主要ルートのレンダリング', () => {
 
   it('カメラ画面がレンダリングされる', () => {
     render(<CameraScreen />);
-    expect(screen.getByText('カメラの許可が必要です')).toBeTruthy();
+    expect(screen.getByText('設定からカメラの権限を許可してください')).toBeTruthy();
   });
 
   it('候補選択画面がレンダリングされる', () => {

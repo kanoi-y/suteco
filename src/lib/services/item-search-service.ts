@@ -12,7 +12,9 @@ export type SearchResult = {
 };
 
 export interface ItemSearchService {
-  search(params: { query: string; municipalityId: string; limit?: number }): Promise<SearchResult[]>;
+  search(params: { query: string; municipalityId: string; limit?: number }): Promise<
+    SearchResult[]
+  >;
 }
 
 /** 品目検索サービスが依存する Repository の最小インターフェース */
@@ -27,7 +29,9 @@ export interface ItemRepositoryLike {
 export class DefaultItemSearchService implements ItemSearchService {
   constructor(private readonly itemRepository: ItemRepositoryLike) {}
 
-  async search(params: { query: string; municipalityId: string; limit?: number }): Promise<SearchResult[]> {
+  async search(params: { query: string; municipalityId: string; limit?: number }): Promise<
+    SearchResult[]
+  > {
     const { query, municipalityId, limit } = params;
 
     if (query === '') return [];
