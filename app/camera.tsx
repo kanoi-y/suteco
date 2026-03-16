@@ -5,7 +5,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 
@@ -19,6 +19,8 @@ export default function CameraScreen() {
   const cameraRef = useRef<CameraView>(null);
 
   const recognizerType = useSettingsStore((state) => state.recognizerType);
+  const status = useClassificationStore((state) => state.status);
+  const errorMessage = useClassificationStore((state) => state.errorMessage);
   const setSourceImageUri = useClassificationStore((state) => state.setSourceImageUri);
   const setStatus = useClassificationStore((state) => state.setStatus);
   const setCandidates = useClassificationStore((state) => state.setCandidates);
@@ -67,26 +69,48 @@ export default function CameraScreen() {
     }
   };
 
+  const handleManualSearch = () => {
+    router.push('/search');
+  };
+
   if (photoUri) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.previewContent}>
           <Image source={{ uri: photoUri }} style={styles.previewImage} testID="preview-image" />
-          <View style={styles.previewActions}>
-            <PrimaryButton title="再撮影" onPress={handleRetake} />
-            <PrimaryButton title="判定する" onPress={handleJudge} />
-          </View>
+          {status === 'error' ? (
+            <View style={styles.errorActions}>
+              <Text style={styles.errorMessage}>{errorMessage ?? '認識に失敗しました'}</Text>
+              <View style={styles.previewActions}>
+                <PrimaryButton title="再試行" onPress={handleJudge} />
+                <PrimaryButton title="手動で検索" onPress={handleManualSearch} />
+              </View>
+            </View>
+          ) : (
+            <View style={styles.previewActions}>
+              <PrimaryButton title="再撮影" onPress={handleRetake} />
+              <PrimaryButton title="判定する" onPress={handleJudge} />
+            </View>
+          )}
         </View>
       </SafeAreaView>
     );
   }
 
   if (!permission?.granted) {
+    const isPermanentlyDenied = !permission?.canAskAgain;
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.permissionContent}>
-          <Text style={styles.permissionMessage}>カメラの許可が必要です</Text>
-          <PrimaryButton title="許可する" onPress={handleRequestPermission} />
+          <Text style={styles.permissionMessage}>
+            {isPermanentlyDenied
+              ? '設定からカメラの権限を許可してください'
+              : 'カメラの許可が必要です'}
+          </Text>
+          <PrimaryButton
+            title={isPermanentlyDenied ? '設定を開く' : '許可する'}
+            onPress={isPermanentlyDenied ? () => Linking.openSettings() : handleRequestPermission}
+          />
         </View>
       </SafeAreaView>
     );
@@ -131,6 +155,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 16,
     gap: 16,
+  },
+  errorActions: {
+    flexDirection: 'column',
+    padding: 16,
+    gap: 16,
+  },
+  errorMessage: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 8,
   },
   camera: {
     flex: 1,

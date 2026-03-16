@@ -75,6 +75,28 @@ describe('カメラ画面', () => {
     resetClassificationStore();
   });
 
+  describe('権限永続拒否時', () => {
+    beforeEach(() => {
+      mockUseCameraPermissions.mockReturnValue([
+        { granted: false, canAskAgain: false },
+        mockRequestPermission,
+        mockGetPermission,
+      ]);
+    });
+
+    it('設定からカメラの権限を許可する旨のメッセージが表示される', () => {
+      render(<CameraScreen />);
+
+      expect(screen.getByText('設定からカメラの権限を許可してください')).toBeTruthy();
+    });
+
+    it('設定を開くボタンが表示される', () => {
+      render(<CameraScreen />);
+
+      expect(screen.getByText('設定を開く')).toBeTruthy();
+    });
+  });
+
   describe('権限未許可時', () => {
     beforeEach(() => {
       mockUseCameraPermissions.mockReturnValue([
@@ -271,6 +293,73 @@ describe('カメラ画面', () => {
         const state = useClassificationStore.getState();
         expect(state.errorMessage).toBe(errorMessage);
         expect(state.status).toBe('error');
+      });
+    });
+
+    it('認識失敗時にエラーメッセージが画面に表示される', async () => {
+      const imageUri = 'file:///library/selected.jpg';
+      const errorMessage = '認識に失敗しました';
+      mockLaunchImageLibraryAsync.mockResolvedValue({
+        canceled: false,
+        assets: [{ uri: imageUri, width: 1920, height: 1080 }],
+      });
+      mockRecognize.mockRejectedValue(new Error(errorMessage));
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+      await screen.findByTestId('preview-image');
+
+      const judgeButton = screen.getByText('判定する');
+      fireEvent.press(judgeButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('認識に失敗しました')).toBeTruthy();
+      });
+    });
+
+    it('認識失敗時に再試行ボタンが表示される', async () => {
+      const imageUri = 'file:///library/selected.jpg';
+      mockLaunchImageLibraryAsync.mockResolvedValue({
+        canceled: false,
+        assets: [{ uri: imageUri, width: 1920, height: 1080 }],
+      });
+      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+      await screen.findByTestId('preview-image');
+
+      const judgeButton = screen.getByText('判定する');
+      fireEvent.press(judgeButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('再試行')).toBeTruthy();
+      });
+    });
+
+    it('認識失敗時に手動で検索ボタンが表示される', async () => {
+      const imageUri = 'file:///library/selected.jpg';
+      mockLaunchImageLibraryAsync.mockResolvedValue({
+        canceled: false,
+        assets: [{ uri: imageUri, width: 1920, height: 1080 }],
+      });
+      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+      await screen.findByTestId('preview-image');
+
+      const judgeButton = screen.getByText('判定する');
+      fireEvent.press(judgeButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('手動で検索')).toBeTruthy();
       });
     });
   });
