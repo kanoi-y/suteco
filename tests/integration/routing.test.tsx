@@ -44,7 +44,7 @@ describe('主要ルートのレンダリング', () => {
 
   it('カメラ画面がレンダリングされる', () => {
     render(<CameraScreen />);
-    expect(screen.getByText('カメラの許可が必要です')).toBeTruthy();
+    expect(screen.getByText('設定からカメラの権限を許可してください')).toBeTruthy();
   });
 
   it('候補選択画面がレンダリングされる', () => {
