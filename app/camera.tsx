@@ -4,7 +4,7 @@ import { useSettingsStore } from '@/stores/settings-store';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Image, Linking, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
@@ -25,6 +25,11 @@ export default function CameraScreen() {
   const setStatus = useClassificationStore((state) => state.setStatus);
   const setCandidates = useClassificationStore((state) => state.setCandidates);
   const setErrorMessage = useClassificationStore((state) => state.setErrorMessage);
+  const reset = useClassificationStore((state) => state.reset);
+
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   const handleRequestPermission = () => {
     requestPermission();
@@ -33,11 +38,13 @@ export default function CameraScreen() {
   const handleCapture = async () => {
     const photo = await cameraRef.current?.takePictureAsync();
     if (photo?.uri) {
+      reset();
       setPhotoUri(photo.uri);
     }
   };
 
   const handleRetake = () => {
+    reset();
     setPhotoUri(null);
   };
 
@@ -47,6 +54,7 @@ export default function CameraScreen() {
       allowsEditing: false,
     });
     if (result.canceled || !result.assets?.[0]?.uri) return;
+    reset();
     setPhotoUri(result.assets[0].uri);
   };
 
@@ -97,8 +105,12 @@ export default function CameraScreen() {
     );
   }
 
-  if (!permission?.granted) {
-    const isPermanentlyDenied = !permission?.canAskAgain;
+  if (!permission) {
+    return <View style={styles.container} />;
+  }
+
+  if (!permission.granted) {
+    const isPermanentlyDenied = !permission.canAskAgain;
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.permissionContent}>
