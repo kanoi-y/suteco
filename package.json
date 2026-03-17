@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "packageManager": "pnpm@10.29.3",
   "engines": {
-    "node": "20.19.4",
-    "pnpm": "10.29.3"
+    "node": "^20.19.4",
+    "pnpm": "^10.29.3"
   },
   "scripts": {
     "test": "jest",
