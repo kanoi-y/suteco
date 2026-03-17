@@ -2,6 +2,11 @@
   "name": "suteco",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": "20.17.0",
+    "pnpm": "10.29.3"
+  },
   "scripts": {
     "test": "jest",
     "test:unit": "jest tests/unit",

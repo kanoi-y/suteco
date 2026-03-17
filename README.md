@@ -1,50 +1,132 @@
-# Welcome to your Expo app 👋
+# Suteco（ステコ）
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+選択した自治体の基準に合わせて、ゴミの分別や捨て方を検索・判定できるモバイルアプリです。Expo / React Native ベースで開発されています。
 
-## Get started
+## 機能一覧
 
-1. Install dependencies
+- **自治体の選択・切り替え**: 利用する自治体を選び、その自治体の分別ルールに基づいて検索・判定します
+- **テキスト検索**: ゴミの品目名やキーワードで分別ルールを検索します
+- **カメラで判定**: ゴミの写真を撮影し、画像認識で品目を推定します
+- **画像から判定**: フォトライブラリから画像を選択して判定します
+- **分別ルールの確認**: 品目ごとのカテゴリー（可燃・不燃など）や詳細な捨て方・注意事項を確認できます
 
-   ```bash
-   npm install
-   ```
+## セットアップ手順
 
-2. Start the app
+### 前提条件
 
-   ```bash
-   npx expo start
-   ```
+- Node.js（推奨: LTS 版）
+- [pnpm](https://pnpm.io/ja/) がインストールされていること
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### インストール
 
 ```bash
-npm run reset-project
+pnpm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## pnpm での起動方法
 
-## Learn more
+- **Expo 開発サーバーを起動**（Expo Go アプリで読み取る QR コードを表示）:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+pnpm start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **iOS シミュレーターで起動**:
 
-## Join the community
+```bash
+pnpm run ios
+```
 
-Join our community of developers creating universal apps.
+- **Android エミュレーターで起動**:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+pnpm run android
+```
+
+- **Web で起動**:
+
+```bash
+pnpm run web
+```
+
+## テスト実行方法
+
+Jest を用いたテストが用意されています。
+
+- **全てのテストを実行**:
+
+```bash
+pnpm test
+```
+
+- **ユニットテストのみ実行**:
+
+```bash
+pnpm run test:unit
+```
+
+- **インテグレーションテストのみ実行**:
+
+```bash
+pnpm run test:integration
+```
+
+## データ追加方法
+
+アプリ内で扱う自治体ごとのゴミ分別データは、`datasets/` ディレクトリ内の JSON ファイルで管理されています。
+
+### 1. JSON ファイルの配置
+
+`datasets/` ディレクトリに、自治体ごとのデータセット JSON ファイルを配置します。ファイル名の例: `kumamoto-kikuchi-dataset.json`。
+
+### 2. スキーマ形式
+
+各 JSON ファイルは次の構造である必要があります。
+
+```json
+{
+  "municipality": {
+    "id": "自治体ID（例: kumamoto-kikuchi）",
+    "displayName": "表示名（例: 熊本県菊池市）",
+    "version": "バージョン（例: 2025-09-01）"
+  },
+  "items": [
+    {
+      "id": "品目ID",
+      "displayName": "品目表示名",
+      "aliases": ["別名1", "別名2"],
+      "keywords": ["検索キーワード1", "キーワード2"]
+    }
+  ],
+  "rules": [
+    {
+      "municipalityId": "自治体ID",
+      "itemId": "品目ID",
+      "categoryName": "カテゴリー名（例: 特定品目）",
+      "instructions": "捨て方の説明",
+      "notes": "補足（任意）",
+      "officialUrl": "公式リンクURL（任意）"
+    }
+  ]
+}
+```
+
+- `rules` の `itemId` は、必ず `items` 内のいずれかの `id` と一致させてください。
+
+### 3. バリデーションの実行
+
+追加したデータが正しいスキーマに準拠しているか確認します。
+
+```bash
+pnpm run validate-dataset:all
+```
+
+特定のファイルのみ検証する場合:
+
+```bash
+pnpm run validate-dataset datasets/あなたのファイル.json
+```
+
+### 4. アプリへの反映
+
+`datasets/` 配下の JSON ファイルは、アプリ起動時に自動的に読み込まれ、ローカルの SQLite データベースにインポートされます。手動での DB 投入コマンドの実行は不要です。追加したファイルを有効にするには、アプリを再起動してください。
