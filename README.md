@@ -17,6 +17,16 @@
 - Node.js（推奨: LTS 版）
 - [pnpm](https://pnpm.io/ja/) がインストールされていること
 
+### 環境変数の設定
+
+`.env.example` をコピーして `.env.local` を作成し、Gemini API のキーを設定します。
+
+```bash
+cp .env.example .env.local
+```
+
+`.env.local` ファイルを開き、`EXPO_PUBLIC_GEMINI_API_KEY` にご自身の Gemini API キーを設定してください。
+
 ### インストール
 
 ```bash
