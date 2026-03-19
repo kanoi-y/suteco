@@ -7,6 +7,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import type { RecognitionResult } from '@/lib/services/recognizer/types';
 import { useClassificationStore } from '@/stores/classification-store';
+import { useMunicipalityStore } from '@/stores/municipality-store';
 import { mockRouter } from '../helpers/expo-router-mock';
 import type { ClassificationState } from '@/stores/classification-store';
 import CameraScreen from '../../app/camera';
@@ -216,6 +217,7 @@ describe('カメラ画面', () => {
         mockRequestPermission,
         mockGetPermission,
       ]);
+      useMunicipalityStore.setState({ selectedMunicipalityId: 'test-city' });
     });
 
     it('判定するボタン押下時に sourceImageUri と status: recognizing がストアに保存される', async () => {
@@ -361,6 +363,28 @@ describe('カメラ画面', () => {
       await waitFor(() => {
         expect(screen.getByText('手動で検索')).toBeTruthy();
       });
+    });
+
+    it('自治体未選択時に判定するボタンを押すとエラーメッセージが表示される', async () => {
+      useMunicipalityStore.setState({ selectedMunicipalityId: null });
+      mockLaunchImageLibraryAsync.mockResolvedValue({
+        canceled: false,
+        assets: [{ uri: 'file:///library/selected.jpg', width: 1920, height: 1080 }],
+      });
+
+      render(<CameraScreen />);
+
+      const selectButton = screen.getByText('ライブラリから選択');
+      fireEvent.press(selectButton);
+      await screen.findByTestId('preview-image');
+
+      const judgeButton = screen.getByText('判定する');
+      fireEvent.press(judgeButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('自治体が選択されていません。設定から自治体を選択してください。')).toBeTruthy();
+      });
+      expect(mockRecognize).not.toHaveBeenCalled();
     });
   });
 });

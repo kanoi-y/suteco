@@ -12,7 +12,7 @@ export type SettingsActions = {
 };
 
 const initialState: SettingsState = {
-  recognizerType: 'mock',
+  recognizerType: 'api',
   showDebugInfo: false,
 };
 

@@ -23,7 +23,7 @@ describe('createRecognizer (factory)', () => {
 
     it('返却された Recognizer の recognize が呼び出し可能であること', async () => {
       const recognizer = createRecognizer('mock');
-      const result = await recognizer.recognize('file:///test.jpg');
+      const result = await recognizer.recognize('file:///test.jpg', 'test-city');
       expect(result).toHaveProperty('candidates');
     });
   });

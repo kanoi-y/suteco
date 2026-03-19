@@ -1,5 +1,6 @@
 import { createRecognizer } from '@/lib/services/recognizer';
 import { useClassificationStore } from '@/stores/classification-store';
+import { useMunicipalityStore } from '@/stores/municipality-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -19,6 +20,7 @@ export default function CameraScreen() {
   const cameraRef = useRef<CameraView>(null);
 
   const recognizerType = useSettingsStore((state) => state.recognizerType);
+  const selectedMunicipalityId = useMunicipalityStore((s) => s.selectedMunicipalityId);
   const status = useClassificationStore((state) => state.status);
   const errorMessage = useClassificationStore((state) => state.errorMessage);
   const setSourceImageUri = useClassificationStore((state) => state.setSourceImageUri);
@@ -60,13 +62,18 @@ export default function CameraScreen() {
 
   const handleJudge = async () => {
     if (!photoUri) return;
+    if (!selectedMunicipalityId) {
+      setStatus('error');
+      setErrorMessage('自治体が選択されていません。設定から自治体を選択してください。');
+      return;
+    }
 
     setSourceImageUri(photoUri);
     setStatus('recognizing');
 
     try {
       const recognizer = createRecognizer(recognizerType);
-      const result = await recognizer.recognize(photoUri);
+      const result = await recognizer.recognize(photoUri, selectedMunicipalityId);
       setCandidates(result.candidates);
       setStatus('success');
       router.push('/candidates');

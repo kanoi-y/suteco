@@ -1,5 +1,6 @@
 import { GoogleGenAI, createPartFromBase64, createPartFromText } from '@google/genai';
 import * as FileSystem from 'expo-file-system/legacy';
+import type { ItemSearchService } from '@/lib/services/item-search-service';
 import type { Recognizer, RecognitionResult } from './types';
 
 const MODEL_ID = 'gemini-3.1-flash-lite-preview';
@@ -47,9 +48,12 @@ function getMimeTypeFromUri(uri: string): string {
 /**
  * Gemini API を利用した画像認識実装
  * 外部 API を呼び出し、認識結果を Candidate[] に変換して返す
+ * ItemSearchService により、候補ラベルを実際の DB アイテムに紐づける
  */
 export class ApiRecognizer implements Recognizer {
-  async recognize(imageUri: string): Promise<RecognitionResult> {
+  constructor(private readonly itemSearchService: ItemSearchService) {}
+
+  async recognize(imageUri: string, municipalityId: string): Promise<RecognitionResult> {
     const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error(
@@ -85,11 +89,30 @@ export class ApiRecognizer implements Recognizer {
     const parsed = JSON.parse(text) as { candidates?: Array<{ label: string; score?: number }> };
     const rawCandidates = parsed.candidates ?? [];
 
-    const candidates = rawCandidates.map((c) => ({
-      itemId: c.label,
-      label: c.label,
-      score: typeof c.score === 'number' ? Math.max(0, Math.min(1, c.score)) : undefined,
-    }));
+    const searchResults = await Promise.all(
+      rawCandidates.map(async (c) => {
+        const hits = await this.itemSearchService.search({
+          query: c.label,
+          municipalityId,
+          limit: 1,
+        });
+        const score =
+          typeof c.score === 'number' ? Math.max(0, Math.min(1, c.score)) : undefined;
+        return { hits, score };
+      })
+    );
+
+    const candidates = searchResults
+      .flatMap(({ hits, score }) =>
+        hits.map((hit) => ({
+          itemId: hit.itemId,
+          label: hit.displayName,
+          score,
+        }))
+      )
+      .filter(
+        (c, i, arr) => arr.findIndex((x) => x.itemId === c.itemId) === i
+      );
 
     return { candidates };
   }
