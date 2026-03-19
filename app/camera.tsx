@@ -70,6 +70,8 @@ export default function CameraScreen() {
 
     setSourceImageUri(photoUri);
     setStatus('recognizing');
+    // UIのローディング表示を確実にレンダリングさせるための遅延
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     try {
       const recognizer = createRecognizer(recognizerType);
@@ -103,8 +105,16 @@ export default function CameraScreen() {
             </View>
           ) : (
             <View style={styles.previewActions}>
-              <PrimaryButton title="再撮影" onPress={handleRetake} />
-              <PrimaryButton title="判定する" onPress={handleJudge} />
+              <PrimaryButton
+                title="再撮影"
+                onPress={handleRetake}
+                disabled={status === 'recognizing'}
+              />
+              <PrimaryButton
+                title="判定する"
+                onPress={handleJudge}
+                loading={status === 'recognizing'}
+              />
             </View>
           )}
         </View>
