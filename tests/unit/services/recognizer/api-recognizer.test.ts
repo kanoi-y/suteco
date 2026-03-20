@@ -127,4 +127,42 @@ describe('ApiRecognizer', () => {
     expect(result.candidates).toHaveLength(1);
     expect(result.candidates[0]?.itemId).toBe('item-pet');
   });
+
+  it('曖昧ラベルが複数品目にマッチした場合は候補を複数返す', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        candidates: [{ label: '缶', score: 0.8 }],
+      }),
+    });
+
+    const itemRepository = {
+      findByMunicipalityId: jest.fn().mockResolvedValue([]),
+    };
+    const itemSearchService = {
+      search: jest.fn().mockResolvedValue([
+        {
+          itemId: 'item-can-steel',
+          displayName: '空き缶',
+          matchedBy: 'display_name_partial' as const,
+        },
+        {
+          itemId: 'item-can-spray',
+          displayName: 'スプレー缶',
+          matchedBy: 'display_name_partial' as const,
+        },
+      ]),
+    };
+
+    const recognizer = new ApiRecognizer(itemSearchService, itemRepository);
+    const result = await recognizer.recognize('file:///x.jpg', 'city');
+
+    expect(itemSearchService.search).toHaveBeenCalledWith({
+      query: '缶',
+      municipalityId: 'city',
+    });
+    expect(result.candidates).toHaveLength(2);
+    expect(result.candidates.map((c) => c.itemId)).toEqual(['item-can-steel', 'item-can-spray']);
+  });
 });

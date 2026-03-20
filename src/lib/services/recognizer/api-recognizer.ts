@@ -93,7 +93,6 @@ export class ApiRecognizer implements Recognizer {
         const hits = await this.itemSearchService.search({
           query: c.label,
           municipalityId,
-          limit: 1,
         });
         const score = typeof c.score === 'number' ? Math.max(0, Math.min(1, c.score)) : undefined;
         return { hits, score };
