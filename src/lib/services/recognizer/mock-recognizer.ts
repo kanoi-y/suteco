@@ -5,7 +5,7 @@ import type { Recognizer, RecognitionResult } from './types';
  * 固定のダミー候補を返す
  */
 export class MockRecognizer implements Recognizer {
-  async recognize(_imageUri: string): Promise<RecognitionResult> {
+  async recognize(_imageUri: string, _municipalityId: string): Promise<RecognitionResult> {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     return {

@@ -16,16 +16,20 @@ export default function CandidatesScreen() {
           <Image testID="source-image" source={{ uri: sourceImageUri }} style={styles.thumbnail} />
         ) : null}
         <SectionCard title="認識結果の候補">
-          {candidates.map((candidate) => (
-            <TouchableOpacity
-              key={candidate.itemId}
-              onPress={() => router.push(`/items/${candidate.itemId}`)}
-              style={styles.candidateItem}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.candidateLabel}>{candidate.label}</Text>
-            </TouchableOpacity>
-          ))}
+          {candidates.length > 0 ? (
+            candidates.map((candidate) => (
+              <TouchableOpacity
+                key={candidate.itemId}
+                onPress={() => router.push(`/items/${candidate.itemId}`)}
+                style={styles.candidateItem}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.candidateLabel}>{candidate.label}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.emptyText}>候補が見つかりませんでした。</Text>
+          )}
         </SectionCard>
         <PrimaryButton title="テキストで検索" onPress={() => router.push('/search')} />
       </ScrollView>
@@ -54,5 +58,11 @@ const styles = StyleSheet.create({
   candidateLabel: {
     fontSize: 16,
     color: '#333',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    paddingVertical: 16,
   },
 });

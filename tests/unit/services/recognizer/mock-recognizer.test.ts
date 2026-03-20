@@ -11,7 +11,7 @@ describe('MockRecognizer', () => {
 
     it('recognize が Promise を返すこと', async () => {
       const recognizer = new MockRecognizer();
-      const resultPromise = recognizer.recognize('file:///test/image.jpg');
+      const resultPromise = recognizer.recognize('file:///test/image.jpg', 'test-city');
       expect(resultPromise).toBeInstanceOf(Promise);
       await expect(resultPromise).resolves.toBeDefined();
     });
@@ -20,7 +20,7 @@ describe('MockRecognizer', () => {
   describe('MockRecognizer が候補を返すテスト', () => {
     it('recognize を呼ぶと固定のダミー候補を信頼度降順で返すこと', async () => {
       const recognizer = new MockRecognizer();
-      const result = await recognizer.recognize('file:///any/image.jpg');
+      const result = await recognizer.recognize('file:///any/image.jpg', 'test-city');
 
       expect(result).toHaveProperty('candidates');
       expect(Array.isArray(result.candidates)).toBe(true);
@@ -41,7 +41,7 @@ describe('MockRecognizer', () => {
 
     it('返却候補に itemId, label, score が含まれること', async () => {
       const recognizer = new MockRecognizer();
-      const result = await recognizer.recognize('file:///test.jpg');
+      const result = await recognizer.recognize('file:///test.jpg', 'test-city');
 
       for (const candidate of result.candidates) {
         expect(candidate).toHaveProperty('itemId');
