@@ -18,7 +18,7 @@ export function createRecognizer(type: RecognizerType): Recognizer {
       const db = getDb();
       const itemRepository = new ItemRepository(db);
       const searchService = new DefaultItemSearchService(itemRepository);
-      return new ApiRecognizer(searchService);
+      return new ApiRecognizer(searchService, itemRepository);
     }
     case 'local':
       return new MockRecognizer();
