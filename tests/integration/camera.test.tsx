@@ -382,7 +382,9 @@ describe('カメラ画面', () => {
       fireEvent.press(judgeButton);
 
       await waitFor(() => {
-        expect(screen.getByText('自治体が選択されていません。設定から自治体を選択してください。')).toBeTruthy();
+        expect(
+          screen.getByText('自治体が選択されていません。設定から自治体を選択してください。')
+        ).toBeTruthy();
       });
       expect(mockRecognize).not.toHaveBeenCalled();
     });

@@ -85,9 +85,7 @@
   },
   "private": true,
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
+    "onlyBuiltDependencies": ["better-sqlite3"]
   },
   "volta": {
     "node": "20.19.4"

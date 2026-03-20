@@ -28,7 +28,7 @@ export default {
     permissions: ['CAMERA'],
   },
   web: {
-    output: 'static',
+    output: 'server',
     favicon: './assets/images/favicon.png',
   },
   plugins: [

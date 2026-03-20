@@ -25,7 +25,11 @@
 cp .env.example .env.local
 ```
 
-`.env.local` ファイルを開き、`EXPO_PUBLIC_GEMINI_API_KEY` にご自身の Gemini API キーを設定してください。
+`.env.local` ファイルを開き、`GEMINI_API_KEY` にご自身の Gemini API キーを設定してください。
+
+画像認識はクライアントから直接 Gemini を呼ばず、[Expo Router の API Routes](https://docs.expo.dev/router/web/api-routes)（`/api/recognize`）経由でサーバー側のみがキーを使います。
+
+本番・プレビューでは EAS Hosting などにサーバーバンドルをデプロイし、ホスティング側のシークレットに `GEMINI_API_KEY` を設定してください。相対パス `fetch('/api/recognize')` は開発時は Metro のオリジン、本番では `expo-router` の `origin` プラグイン設定や `EXPO_UNSTABLE_DEPLOY_SERVER=1` などで解決されます（詳細は [API Routes ドキュメント](https://docs.expo.dev/router/web/api-routes) を参照）。
 
 ### インストール
 
