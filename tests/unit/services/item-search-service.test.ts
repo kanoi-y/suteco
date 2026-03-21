@@ -1,11 +1,21 @@
-import type { Item } from '@/schema/municipality-dataset-schema';
 import { DefaultItemSearchService } from '@/lib/services/item-search-service';
+import type { Item } from '@/schema/municipality-dataset-schema';
 
 /** テスト用の Fake ItemRepository - メモリ上の品目一覧を返す */
 class FakeItemRepository {
-  constructor(private readonly items: Item[] = []) {}
+  constructor(
+    private readonly items: Item[] = [],
+    private readonly itemCategoryById: Record<string, string> = {}
+  ) {}
 
-  async findByMunicipalityId(_municipalityId: string): Promise<Item[]> {
+  async findByMunicipalityId(
+    _municipalityId: string,
+    options?: { categoryName?: string }
+  ): Promise<Item[]> {
+    const cat = options?.categoryName;
+    if (cat != null && cat !== '') {
+      return this.items.filter((item) => this.itemCategoryById[item.id] === cat);
+    }
     return [...this.items];
   }
 }
@@ -170,6 +180,51 @@ describe('DefaultItemSearchService', () => {
       const results = await service.search({ query: '', municipalityId: 'test-city' });
 
       expect(results).toEqual([]);
+    });
+  });
+
+  describe('カテゴリー絞り込み', () => {
+    it('categoryName 指定時はそのカテゴリーの品目だけを検索対象にする', async () => {
+      const items = [
+        createItem({ id: 'burn', displayName: 'テストA', aliases: [], keywords: [] }),
+        createItem({ id: 'plastic', displayName: 'テストB', aliases: [], keywords: [] }),
+      ];
+      const categoryById: Record<string, string> = {
+        burn: '燃やすごみ',
+        plastic: 'プラスチック製容器包装',
+      };
+      const service = new DefaultItemSearchService(new FakeItemRepository(items, categoryById));
+
+      const unfiltered = await service.search({ query: 'テスト', municipalityId: 'test-city' });
+      expect(unfiltered).toHaveLength(2);
+
+      const filtered = await service.search({
+        query: 'テスト',
+        municipalityId: 'test-city',
+        categoryName: '燃やすごみ',
+      });
+      expect(filtered).toHaveLength(1);
+      expect(filtered[0]?.itemId).toBe('burn');
+    });
+  });
+
+  describe('カテゴリーブラウズ', () => {
+    it('クエリが空で categoryName のみ指定時は該当品目を表示名順で返す', async () => {
+      const items = [
+        createItem({ id: 'c', displayName: 'いちご', aliases: [], keywords: [] }),
+        createItem({ id: 'a', displayName: 'あんず', aliases: [], keywords: [] }),
+      ];
+      const categoryById: Record<string, string> = { c: '果物', a: '果物' };
+      const service = new DefaultItemSearchService(new FakeItemRepository(items, categoryById));
+
+      const results = await service.search({
+        query: '',
+        municipalityId: 'test-city',
+        categoryName: '果物',
+      });
+
+      expect(results.map((r) => r.itemId)).toEqual(['a', 'c']);
+      expect(results.every((r) => r.matchedBy === 'category_browse')).toBe(true);
     });
   });
 });

@@ -104,4 +104,20 @@ describe('DisposalRuleRepository', () => {
       expect(found).toEqual([]);
     });
   });
+
+  describe('listDistinctCategoryNames', () => {
+    it('自治体内のカテゴリー名を重複なく昇順で返す', async () => {
+      await repository.save(createDisposalRule({ itemId: 'item_a', categoryName: '資源物' }));
+      await repository.save(createDisposalRule({ itemId: 'item_b', categoryName: '燃やすごみ' }));
+      await repository.save(createDisposalRule({ itemId: 'item_c', categoryName: '資源物' }));
+
+      const names = await repository.listDistinctCategoryNames('test-city');
+      expect(names).toEqual(['燃やすごみ', '資源物']);
+    });
+
+    it('存在しない自治体IDでは空配列を返す', async () => {
+      const names = await repository.listDistinctCategoryNames('no-city');
+      expect(names).toEqual([]);
+    });
+  });
 });
