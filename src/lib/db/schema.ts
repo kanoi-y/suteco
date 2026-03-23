@@ -5,6 +5,7 @@ export const municipalities = sqliteTable('municipalities', {
   id: text('id').primaryKey(),
   displayName: text('display_name').notNull(),
   version: text('version').notNull(),
+  contentDigest: text('content_digest'),
 });
 
 /** 品目テーブル */

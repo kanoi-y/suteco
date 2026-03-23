@@ -1,0 +1,1 @@
+ALTER TABLE `municipalities` ADD `content_digest` text;

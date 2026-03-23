@@ -1,4 +1,5 @@
 import { defaultDatasets } from '@/lib/datasets';
+import { computeDatasetContentDigest } from '@/lib/dataset/content-digest';
 import { importDataset, pruneUnbundledMunicipalities } from '@/lib/dataset/import';
 import { getDb } from '@/lib/db/client';
 import migrations from '../../drizzle/migrations';
@@ -34,7 +35,8 @@ export function InitializationProvider({ children }: InitializationProviderProps
 
       for (const dataset of defaultDatasets) {
         const exists = existingMunicipalities.find((m) => m.id === dataset.municipality.id);
-        if (!exists || exists.version !== dataset.municipality.version) {
+        const contentDigest = computeDatasetContentDigest(dataset);
+        if (!exists || exists.contentDigest !== contentDigest) {
           await importDataset(db, dataset);
         }
       }

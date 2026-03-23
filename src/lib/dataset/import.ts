@@ -1,5 +1,6 @@
 import type { Db } from '@/lib/db/client';
 import { disposalRules, items, municipalities } from '@/lib/db/schema';
+import { computeDatasetContentDigest } from '@/lib/dataset/content-digest';
 import { municipalityDatasetSchema } from '@/schema/municipality-dataset-schema';
 import type { MunicipalityDataset } from '@/schema/municipality-dataset-schema';
 import { and, eq, notInArray, sql } from 'drizzle-orm';
@@ -14,6 +15,7 @@ import { and, eq, notInArray, sql } from 'drizzle-orm';
  */
 export async function importDataset(db: Db, dataset: MunicipalityDataset): Promise<void> {
   const parsed = municipalityDatasetSchema.parse(dataset);
+  const contentDigest = computeDatasetContentDigest(parsed);
 
   await db.transaction(async (tx) => {
     await tx
@@ -22,12 +24,14 @@ export async function importDataset(db: Db, dataset: MunicipalityDataset): Promi
         id: parsed.municipality.id,
         displayName: parsed.municipality.displayName,
         version: parsed.municipality.version,
+        contentDigest,
       })
       .onConflictDoUpdate({
         target: municipalities.id,
         set: {
           displayName: parsed.municipality.displayName,
           version: parsed.municipality.version,
+          contentDigest,
         },
       });
 
