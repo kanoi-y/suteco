@@ -1,7 +1,7 @@
 import type { Db } from '@/lib/db/client';
 import { disposalRules, items } from '@/lib/db/schema';
 import type { Item } from '@/schema/municipality-dataset-schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 /**
  * 品目データの永続化を行う Repository
@@ -62,8 +62,19 @@ export class ItemRepository {
 
   /**
    * 指定自治体に分別ルールが登録されている品目のみを取得する
+   * @param options.categoryName 指定時はそのカテゴリーのルールに紐づく品目に限る
    */
-  async findByMunicipalityId(municipalityId: string): Promise<Item[]> {
+  async findByMunicipalityId(
+    municipalityId: string,
+    options?: { categoryName?: string }
+  ): Promise<Item[]> {
+    const categoryName = options?.categoryName;
+    const municipalityCond = eq(disposalRules.municipalityId, municipalityId);
+    const whereClause =
+      categoryName != null && categoryName !== ''
+        ? and(municipalityCond, eq(disposalRules.categoryName, categoryName))
+        : municipalityCond;
+
     const rows = await this.db
       .select({
         id: items.id,
@@ -73,7 +84,7 @@ export class ItemRepository {
       })
       .from(items)
       .innerJoin(disposalRules, eq(items.id, disposalRules.itemId))
-      .where(eq(disposalRules.municipalityId, municipalityId));
+      .where(whereClause);
 
     return rows.map((row) => ({
       id: row.id,

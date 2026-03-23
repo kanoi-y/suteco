@@ -29,6 +29,7 @@ const MainContent = () => <Text>メインコンテンツ</Text>;
 describe('初回起動時の import 導線', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockImportDataset.mockResolvedValue(undefined);
   });
 
   describe('初回起動時', () => {
@@ -129,6 +130,81 @@ describe('初回起動時の import 導線', () => {
 
       expect(mockImportDataset).not.toHaveBeenCalled();
       expect(screen.queryByText('初期設定中...')).toBeNull();
+
+      await expoDb.closeAsync();
+    });
+
+    it('municipality.version が同じでも contentDigest が異なれば再インポートされる', async () => {
+      const { expoDb, db } = await openTestDb('restart_digest_changed');
+
+      const { importDataset: realImportDataset } =
+        jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
+      for (const dataset of defaultDatasets) {
+        await realImportDataset(db, dataset);
+      }
+
+      const targetDataset = defaultDatasets[0];
+      if (!targetDataset) {
+        throw new Error('defaultDatasets が空です');
+      }
+
+      expoDb.runSync('UPDATE municipalities SET content_digest = ? WHERE id = ?', [
+        'stale_digest',
+        targetDataset.municipality.id,
+      ]);
+
+      mockGetDb.mockReturnValue(db);
+      mockImportDataset.mockClear();
+
+      render(
+        <InitializationProvider>
+          <MainContent />
+        </InitializationProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('メインコンテンツ')).toBeTruthy();
+      });
+
+      expect(mockImportDataset).toHaveBeenCalledTimes(1);
+      expect(mockImportDataset).toHaveBeenCalledWith(db, targetDataset);
+
+      await expoDb.closeAsync();
+    });
+
+    it('既存DBで contentDigest が未保存なら一度だけ再インポートされる', async () => {
+      const { expoDb, db } = await openTestDb('restart_digest_missing');
+
+      const { importDataset: realImportDataset } =
+        jest.requireActual<typeof import('@/lib/dataset/import')>('@/lib/dataset/import');
+      for (const dataset of defaultDatasets) {
+        await realImportDataset(db, dataset);
+      }
+
+      const targetDataset = defaultDatasets[0];
+      if (!targetDataset) {
+        throw new Error('defaultDatasets が空です');
+      }
+
+      expoDb.runSync('UPDATE municipalities SET content_digest = NULL WHERE id = ?', [
+        targetDataset.municipality.id,
+      ]);
+
+      mockGetDb.mockReturnValue(db);
+      mockImportDataset.mockClear();
+
+      render(
+        <InitializationProvider>
+          <MainContent />
+        </InitializationProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('メインコンテンツ')).toBeTruthy();
+      });
+
+      expect(mockImportDataset).toHaveBeenCalledTimes(1);
+      expect(mockImportDataset).toHaveBeenCalledWith(db, targetDataset);
 
       await expoDb.closeAsync();
     });

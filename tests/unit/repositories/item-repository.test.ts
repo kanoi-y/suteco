@@ -139,5 +139,40 @@ describe('ItemRepository', () => {
       const found = await repository.findByMunicipalityId('no-such-city');
       expect(found).toEqual([]);
     });
+
+    it('categoryName 指定時はそのカテゴリーの品目のみ取得できる', async () => {
+      const municipalityId = 'city-filter';
+      await importDataset(db, {
+        municipality: {
+          id: municipalityId,
+          displayName: 'テスト市',
+          version: '2025-01-01',
+        },
+        items: [
+          createItem({ id: 'i1', displayName: '品目1' }),
+          createItem({ id: 'i2', displayName: '品目2' }),
+        ],
+        rules: [
+          {
+            municipalityId,
+            itemId: 'i1',
+            categoryName: '燃やすごみ',
+            instructions: '出してください。',
+          },
+          {
+            municipalityId,
+            itemId: 'i2',
+            categoryName: '資源物',
+            instructions: '出してください。',
+          },
+        ],
+      });
+
+      const found = await repository.findByMunicipalityId(municipalityId, {
+        categoryName: '資源物',
+      });
+      expect(found).toHaveLength(1);
+      expect(found[0]?.id).toBe('i2');
+    });
   });
 });

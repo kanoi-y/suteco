@@ -1,7 +1,7 @@
 import type { Db } from '@/lib/db/client';
 import { disposalRules } from '@/lib/db/schema';
 import type { DisposalRule } from '@/schema/municipality-dataset-schema';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 
 /**
  * 分別ルールデータの永続化を行う Repository
@@ -67,5 +67,15 @@ export class DisposalRuleRepository {
       notes: row.notes ?? undefined,
       officialUrl: row.officialUrl ?? undefined,
     }));
+  }
+
+  /** 指定自治体に登録されている分別カテゴリー名を重複なく昇順で返す */
+  async listDistinctCategoryNames(municipalityId: string): Promise<string[]> {
+    const rows = await this.db
+      .selectDistinct({ categoryName: disposalRules.categoryName })
+      .from(disposalRules)
+      .where(eq(disposalRules.municipalityId, municipalityId))
+      .orderBy(asc(disposalRules.categoryName));
+    return rows.map((row) => row.categoryName);
   }
 }
