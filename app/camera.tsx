@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Image, Linking, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
+import { TopLinkHeader } from '@/components/TopLinkHeader';
 
 export default function CameraScreen() {
   const router = useRouter();
@@ -93,6 +94,9 @@ export default function CameraScreen() {
   if (photoUri) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.topLink}>
+          <TopLinkHeader />
+        </View>
         <View style={styles.previewContent}>
           <Image source={{ uri: photoUri }} style={styles.previewImage} testID="preview-image" />
           {status === 'error' ? (
@@ -130,6 +134,9 @@ export default function CameraScreen() {
     const isPermanentlyDenied = !permission.canAskAgain;
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.topLink}>
+          <TopLinkHeader />
+        </View>
         <View style={styles.permissionContent}>
           <Text style={styles.permissionMessage}>
             {isPermanentlyDenied
@@ -149,6 +156,9 @@ export default function CameraScreen() {
     <View style={styles.container}>
       <CameraView ref={cameraRef} style={styles.camera}>
         <SafeAreaView style={styles.cameraOverlay} edges={['top']}>
+          <View style={styles.cameraTopLink}>
+            <TopLinkHeader />
+          </View>
           <View style={styles.captureArea}>
             <PrimaryButton title="撮影" onPress={handleCapture} />
             <PrimaryButton title="ライブラリから選択" onPress={handleSelectFromLibrary} />
@@ -162,6 +172,9 @@ export default function CameraScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  topLink: {
+    padding: 16,
   },
   permissionContent: {
     flex: 1,
@@ -200,7 +213,10 @@ const styles = StyleSheet.create({
   },
   cameraOverlay: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  cameraTopLink: {
+    padding: 16,
   },
   captureArea: {
     padding: 16,
