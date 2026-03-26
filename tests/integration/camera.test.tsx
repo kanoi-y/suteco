@@ -275,12 +275,12 @@ describe('カメラ画面', () => {
 
     it('認識失敗時に errorMessage と status: error がストアに保存される', async () => {
       const imageUri = 'file:///library/selected.jpg';
-      const errorMessage = '認識に失敗しました';
+      const errorMessage = '画像認識に失敗しました。';
       mockLaunchImageLibraryAsync.mockResolvedValue({
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error(errorMessage));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 
@@ -300,12 +300,12 @@ describe('カメラ画面', () => {
 
     it('認識失敗時にエラーメッセージが画面に表示される', async () => {
       const imageUri = 'file:///library/selected.jpg';
-      const errorMessage = '認識に失敗しました';
+      const errorMessage = '画像認識に失敗しました。';
       mockLaunchImageLibraryAsync.mockResolvedValue({
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error(errorMessage));
+      mockRecognize.mockRejectedValue(new Error('Internal Server Error'));
 
       render(<CameraScreen />);
 
@@ -317,7 +317,7 @@ describe('カメラ画面', () => {
       fireEvent.press(judgeButton);
 
       await waitFor(() => {
-        expect(screen.getByText('認識に失敗しました')).toBeTruthy();
+        expect(screen.getByText('画像認識に失敗しました。')).toBeTruthy();
       });
     });
 
@@ -327,7 +327,7 @@ describe('カメラ画面', () => {
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 
@@ -349,7 +349,7 @@ describe('カメラ画面', () => {
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 

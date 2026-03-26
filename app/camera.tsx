@@ -11,6 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 import { TopLinkHeader } from '@/components/TopLinkHeader';
 
+const IMAGE_RECOGNITION_ERROR_MESSAGE = '画像認識に失敗しました。';
+
 export default function CameraScreen() {
   const router = useRouter();
   const { photoUri: initialPhotoUri } = useLocalSearchParams<{ photoUri?: string }>();
@@ -81,8 +83,8 @@ export default function CameraScreen() {
       setStatus('success');
       router.push('/candidates');
     } catch (err) {
-      const message = err instanceof Error ? err.message : '認識に失敗しました';
-      setErrorMessage(message);
+      // 例外メッセージの言語に依存せず、ユーザー向け表示は日本語で統一する
+      setErrorMessage(IMAGE_RECOGNITION_ERROR_MESSAGE);
       setStatus('error');
     }
   };
@@ -101,7 +103,9 @@ export default function CameraScreen() {
           <Image source={{ uri: photoUri }} style={styles.previewImage} testID="preview-image" />
           {status === 'error' ? (
             <View style={styles.errorActions}>
-              <Text style={styles.errorMessage}>{errorMessage ?? '認識に失敗しました'}</Text>
+              <Text style={styles.errorMessage}>
+                {errorMessage ?? IMAGE_RECOGNITION_ERROR_MESSAGE}
+              </Text>
               <View style={styles.previewActions}>
                 <PrimaryButton title="再試行" onPress={handleJudge} />
                 <PrimaryButton title="手動で検索" onPress={handleManualSearch} />
