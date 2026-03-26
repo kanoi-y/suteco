@@ -73,6 +73,7 @@ describe('カメラ画面', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockRouter.push.mockClear();
+    mockRouter.replace.mockClear();
     resetClassificationStore();
   });
 
@@ -148,6 +149,16 @@ describe('カメラ画面', () => {
       render(<CameraScreen />);
 
       expect(screen.getByText('ライブラリから選択')).toBeTruthy();
+    });
+
+    it('TOPへ押下時にホームへ replace で遷移する', () => {
+      render(<CameraScreen />);
+
+      const topLink = screen.getByTestId('top-link-header');
+      fireEvent.press(topLink);
+
+      expect(mockRouter.replace).toHaveBeenCalledWith('/');
+      expect(mockRouter.push).not.toHaveBeenCalledWith('/');
     });
 
     it('ライブラリから選択ボタン押下時に launchImageLibraryAsync が呼ばれる', () => {
@@ -275,12 +286,12 @@ describe('カメラ画面', () => {
 
     it('認識失敗時に errorMessage と status: error がストアに保存される', async () => {
       const imageUri = 'file:///library/selected.jpg';
-      const errorMessage = '認識に失敗しました';
+      const errorMessage = '画像認識に失敗しました。';
       mockLaunchImageLibraryAsync.mockResolvedValue({
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error(errorMessage));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 
@@ -300,12 +311,12 @@ describe('カメラ画面', () => {
 
     it('認識失敗時にエラーメッセージが画面に表示される', async () => {
       const imageUri = 'file:///library/selected.jpg';
-      const errorMessage = '認識に失敗しました';
+      const errorMessage = '画像認識に失敗しました。';
       mockLaunchImageLibraryAsync.mockResolvedValue({
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error(errorMessage));
+      mockRecognize.mockRejectedValue(new Error('Internal Server Error'));
 
       render(<CameraScreen />);
 
@@ -317,7 +328,7 @@ describe('カメラ画面', () => {
       fireEvent.press(judgeButton);
 
       await waitFor(() => {
-        expect(screen.getByText('認識に失敗しました')).toBeTruthy();
+        expect(screen.getByText('画像認識に失敗しました。')).toBeTruthy();
       });
     });
 
@@ -327,7 +338,7 @@ describe('カメラ画面', () => {
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 
@@ -349,7 +360,7 @@ describe('カメラ画面', () => {
         canceled: false,
         assets: [{ uri: imageUri, width: 1920, height: 1080 }],
       });
-      mockRecognize.mockRejectedValue(new Error('認識に失敗しました'));
+      mockRecognize.mockRejectedValue(new Error('Network request failed'));
 
       render(<CameraScreen />);
 

@@ -1,4 +1,5 @@
 import { useMunicipalityStore } from '@/stores/municipality-store';
+import { TopLinkHeader } from '@/components/TopLinkHeader';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +10,9 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.topLink}>
+        <TopLinkHeader />
+      </View>
       <Text style={styles.title}>設定画面</Text>
 
       <View style={styles.section}>
@@ -33,6 +37,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     backgroundColor: '#fff',
+  },
+  topLink: {
+    marginBottom: 16,
   },
   title: {
     fontSize: 24,

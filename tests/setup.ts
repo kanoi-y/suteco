@@ -23,6 +23,7 @@ jest.mock('expo-router', () => {
   const { Pressable } = require('react-native');
   return {
     useRouter: () => mockRouter,
+    usePathname: () => '/',
     useLocalSearchParams: jest.fn(() => ({})),
     Link: ({
       children,

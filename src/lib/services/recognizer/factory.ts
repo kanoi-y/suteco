@@ -8,7 +8,6 @@ import { MockRecognizer } from './mock-recognizer';
 
 /**
  * RecognizerType に応じて Recognizer インスタンスを生成する Factory
- * TODO: local の実装を追加する
  */
 export function createRecognizer(type: RecognizerType): Recognizer {
   switch (type) {

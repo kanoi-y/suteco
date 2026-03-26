@@ -43,13 +43,13 @@ export async function POST(request: Request): Promise<Response> {
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: 'Invalid JSON body' }, { status: 400 });
+    return Response.json({ error: 'リクエストボディが JSON 形式ではありません。' }, { status: 400 });
   }
 
   const parsed = requestBodySchema.safeParse(body);
   if (!parsed.success) {
     return Response.json(
-      { error: 'Invalid request body', details: parsed.error.flatten() },
+      { error: 'リクエストボディが不正です。', details: parsed.error.flatten() },
       { status: 400 }
     );
   }
@@ -78,7 +78,7 @@ export async function POST(request: Request): Promise<Response> {
     const json = JSON.parse(text) as { candidates?: Array<{ label: string; score?: number }> };
     return Response.json({ candidates: json.candidates ?? [] });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Gemini request failed';
+    const message = err instanceof Error ? err.message : '画像認識リクエストに失敗しました。';
     return Response.json({ error: message }, { status: 502 });
   }
 }
