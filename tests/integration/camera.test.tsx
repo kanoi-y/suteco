@@ -73,6 +73,7 @@ describe('カメラ画面', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockRouter.push.mockClear();
+    mockRouter.replace.mockClear();
     resetClassificationStore();
   });
 
@@ -148,6 +149,16 @@ describe('カメラ画面', () => {
       render(<CameraScreen />);
 
       expect(screen.getByText('ライブラリから選択')).toBeTruthy();
+    });
+
+    it('TOPへ押下時にホームへ replace で遷移する', () => {
+      render(<CameraScreen />);
+
+      const topLink = screen.getByTestId('top-link-header');
+      fireEvent.press(topLink);
+
+      expect(mockRouter.replace).toHaveBeenCalledWith('/');
+      expect(mockRouter.push).not.toHaveBeenCalledWith('/');
     });
 
     it('ライブラリから選択ボタン押下時に launchImageLibraryAsync が呼ばれる', () => {

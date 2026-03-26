@@ -12,7 +12,7 @@ export function TopLinkHeader({ label = 'TOPへ' }: TopLinkHeaderProps) {
     <Pressable
       testID="top-link-header"
       accessibilityRole="button"
-      onPress={() => router.push('/')}
+      onPress={() => router.replace('/')}
       style={({ pressed }) => [styles.link, pressed && styles.linkPressed]}
     >
       <Text style={styles.text}>{label}</Text>
